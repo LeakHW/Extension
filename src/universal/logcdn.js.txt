@@ -1,0 +1,55 @@
+// tbc
+// logs cdn for a optional project that collects all the urls of hw image assets for various purposes
+
+// old script below:
+const CDN_DOMAIN = "cdn.sparx-learning.com";
+
+let uniqueUrls = new Set();
+
+// Load stored URLs on startup
+chrome.storage.local.get(["urls"], (result) => {
+    if (result.urls) {
+        uniqueUrls = new Set(result.urls);
+    }
+});
+
+// Track CDN requests
+chrome.webRequest.onCompleted.addListener(
+    (details) => {
+        try {
+            const url = new URL(details.url);
+
+            if (url.hostname === CDN_DOMAIN) {
+                if (!uniqueUrls.has(details.url)) {
+                    uniqueUrls.add(details.url);
+
+                    chrome.storage.local.set({
+                        urls: Array.from(uniqueUrls)
+                    });
+                }
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    },
+    {
+        urls: ["*://cdn.sparx-learning.com/*"]
+    }
+);
+
+// When extension icon is clicked → download file
+chrome.action.onClicked.addListener(() => {
+    chrome.storage.local.get(["urls"], (result) => {
+        const urls = result.urls || [];
+        const content = urls.join("\n");
+
+        const dataUrl = "data:text/plain;charset=utf-8," + encodeURIComponent(content);
+
+        chrome.downloads.download({
+            url: dataUrl,
+            filename: "sparx-cdn-links.txt",
+            conflictAction: "overwrite",
+            saveAs: true
+        });
+    });
+});

@@ -9,3 +9,11 @@
 /*         index.css • Sparx Maths         */
 /*          Main Sparx Maths CSS           */
 /*///////////////////////////////////////////*/
+
+.leak-menu-item {
+    cursor: pointer !important;
+}
+
+.leak-menu-item:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}

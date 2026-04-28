@@ -4,7 +4,18 @@
   "version": "1.0",
   "description": "Leak homework helper",
   "action": {
-    "default_popup": "universal/popup.html"
+  },
+  "permissions": [
+    "storage",
+    "scripting",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "<all_urls>",
+    "http://141.147.118.157:5678/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
   },
   "content_scripts": [
     {
@@ -94,25 +105,17 @@
     },
     {
       "matches": [
-        "*://maths.sparx-learning.com/*",
-        "*://science.sparx-learning.com/*",
-        "*://reader.sparx-learning.com/*",
-        "*://auth.sparx-learning.com/*"
+        "<all_urls>"
       ],
       "js": [
-        "sparx/universal.js"
+        "universal/leak_menu.js",
+        "universal/ai/chatbot.js"
       ],
       "css": [
-        "sparx/universal.css"
+        "universal/leak_menu.css",
+        "universal/ai/chatbot.css"
       ],
       "run_at": "document_idle"
     }
-  ],
-  "permissions": [
-    "storage"
-  ],
-  "host_permissions": [
-    "<all_urls>",
-    "http://141.147.118.157:5678/*"
   ]
 }

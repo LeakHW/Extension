@@ -1,0 +1,188 @@
+/*///////////////////////////////////////////*/
+/* THIS CODE IS PART OF THE LEAKHW PROJECT */
+/*    © LeakHW 2026 - GNU GPLv3 License    */
+/*                                         */
+/* Please do NOT claim this code as solely */
+/* your own code. All code here is part of */
+/*     the open-source LeakHW project.     */
+/*                                         */
+/*    chatbot.css • Universal Chatbot      */
+/*        Universal Leak Chatbot CSS       */
+/*///////////////////////////////////////////*/
+
+/* Chatbot Container - Bottom Right */
+.leak-ai-chatbot-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 320px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    z-index: 9999999;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    overflow: hidden;
+    display: none;
+    border: 1px solid #eee;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateY(20px);
+    opacity: 0;
+}
+
+.leak-ai-chatbot-container.active {
+    display: flex;
+    flex-direction: column;
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.leak-ai-chatbot-window {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.leak-ai-chatbot-header {
+    background: #3182ce;
+    color: white;
+    padding: 14px 16px;
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 15px;
+}
+
+.leak-ai-chatbot-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+    margin: 0;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+}
+
+.leak-ai-chatbot-close:hover {
+    opacity: 1;
+}
+
+.leak-ai-chatbot-body {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.leak-ai-chatbot-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.leak-ai-chatbot-field label {
+    font-size: 11px;
+    color: #718096;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.leak-ai-chatbot-input {
+    padding: 10px 12px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    transition: all 0.2s;
+    background: #f7fafc;
+    width: auto !important;
+}
+
+.leak-ai-chatbot-input:focus {
+    border-color: #3182ce;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+}
+
+.leak-ai-chatbot-textarea {
+    resize: none;
+    height: 90px;
+    line-height: 1.5;
+}
+
+.leak-ai-chatbot-send {
+    background: #3182ce;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 14px;
+}
+
+.leak-ai-chatbot-send:hover {
+    background: #2b6cb0;
+    box-shadow: 0 4px 12px rgba(49, 130, 206, 0.2);
+}
+
+.leak-ai-chatbot-loading {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #4a5568;
+    margin-top: 4px;
+}
+
+.leak-ai-chatbot-loading.active {
+    display: flex;
+}
+
+.leak-ai-chatbot-spinner {
+    width: 14px;
+    height: 14px;
+    border: 2px solid #e2e8f0;
+    border-top: 2px solid #3182ce;
+    border-radius: 50%;
+    animation: leakSpin 0.8s linear infinite;
+}
+
+@keyframes leakSpin {
+    to { transform: rotate(360deg); }
+}
+
+.leak-ai-chatbot-response {
+    margin-top: 8px;
+    padding: 12px;
+    background: #f7fafc;
+    border-radius: 8px;
+    font-size: 13px;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #edf2f7;
+    white-space: pre-wrap;
+    display: none;
+    color: #2d3748;
+    line-height: 1.5;
+}
+
+.leak-ai-chatbot-response.active {
+    display: block;
+}
+
+.leak-ai-chatbot-footer {
+    margin-top: 8px;
+    font-size: 10px;
+    color: #a0aec0;
+    text-align: center;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}

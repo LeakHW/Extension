@@ -98,7 +98,6 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch (error) {
                 responseDiv.classList.add('active');
                 responseDiv.textContent = 'Error: ' + error.message + '. Please check your token and connection.';
-                console.error('Leak AI Assistant Error:', error);
             } finally {
                 loadingDiv.classList.remove('active');
                 sendBtn.disabled = false;

@@ -9,3 +9,11 @@
 //     universal.js • Sparx Universal      //
 //          Universal Sparx Code           //
 /////////////////////////////////////////////
+
+(function() {
+    /**
+     * UNIVERSAL SPARX HANDLER
+     * This script is reserved for Sparx-specific universal logic.
+     * Currently, the main Leak Menu is handled by the root universal/leak_menu.js.
+     */
+})();

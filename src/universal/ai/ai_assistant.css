@@ -26,7 +26,7 @@ body.leak-ai-popup {
 }
 
 .leak-ai-header {
-    background: #00d1b2;
+    background: #3182ce;
     color: white;
     padding: 16px;
     font-weight: 700;
@@ -69,9 +69,9 @@ body.leak-ai-popup {
 }
 
 .leak-ai-input:focus {
-    border-color: #00d1b2;
+    border-color: #3182ce;
     background: #fff;
-    box-shadow: 0 0 0 3px rgba(0, 209, 178, 0.1);
+    box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
 }
 
 .leak-ai-textarea {
@@ -81,7 +81,7 @@ body.leak-ai-popup {
 }
 
 .leak-ai-send {
-    background: #00d1b2;
+    background: #3182ce;
     color: white;
     border: none;
     padding: 12px;
@@ -94,18 +94,17 @@ body.leak-ai-popup {
 }
 
 .leak-ai-send:hover {
-    background: #00b89c;
-    box-shadow: 0 4px 12px rgba(0, 209, 178, 0.2);
+    background: #2b6cb0;
+    box-shadow: 0 4px 12px rgba(49, 130, 206, 0.2);
 }
 
 .leak-ai-loading {
     display: none;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    font-size: 13px;
+    gap: 10px;
+    font-size: 14px;
     color: #666;
-    margin-top: 8px;
 }
 
 .leak-ai-loading.active {
@@ -113,10 +112,10 @@ body.leak-ai-popup {
 }
 
 .leak-ai-spinner {
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
     border: 2px solid #eee;
-    border-top: 2px solid #00d1b2;
+    border-top: 2px solid #3182ce;
     border-radius: 50%;
     animation: leakSpin 0.8s linear infinite;
 }
@@ -126,18 +125,17 @@ body.leak-ai-popup {
 }
 
 .leak-ai-response {
-    margin-top: 12px;
-    padding: 14px;
-    background: #f8fafc;
-    border-radius: 10px;
+    margin-top: 10px;
+    padding: 12px;
+    background: #f9f9f9;
+    border-radius: 8px;
     font-size: 14px;
-    max-height: 250px;
+    max-height: 150px;
     overflow-y: auto;
-    border: 1px solid #edf2f7;
+    border: 1px solid #eee;
     white-space: pre-wrap;
     display: none;
-    color: #2d3748;
-    line-height: 1.6;
+    color: #333;
 }
 
 .leak-ai-response.active {
@@ -145,11 +143,11 @@ body.leak-ai-popup {
 }
 
 .leak-ai-footer {
-    margin-top: 16px;
+    margin-top: 10px;
     font-size: 11px;
-    color: #a0aec0;
+    color: #999;
     text-align: center;
-    font-weight: 600;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1px;
 }
