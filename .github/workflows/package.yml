@@ -1,0 +1,28 @@
+name: Package Extension
+
+on:
+  release:
+    types: [published, created, edited]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create Extension Zip
+        run: |
+          # Zips the contents of src/ into extension.zip
+          # We cd into src so the files are at the root of the zip archive
+          cd src && zip -r ../extension.zip .
+
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v2
+        with:
+          files: extension.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
