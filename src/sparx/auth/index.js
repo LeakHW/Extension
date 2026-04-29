@@ -8,6 +8,19 @@
 //                                         //
 //         index.js • Sparx Auth           //
 //          Main Sparx Auth Code           //
-///////////////////////////////////////////// 
+/////////////////////////////////////////////
 
-// TBC
+(function() {
+    /**
+     * SPARX AUTH PLATFORM MANAGER
+     * Manages tools and injection for Sparx Auth pages.
+     */
+    
+    // 1. Configure and Enable Tools
+    if (window.Leak) {
+        window.Leak.enableTool('leak_menu', {
+            title: 'Leak Sparx Auth',
+            aiDisabled: true // Disable AI on login/auth pages
+        });
+    }
+})();

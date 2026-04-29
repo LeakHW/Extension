@@ -23,6 +23,7 @@
         "*://app.senecalearning.com/login/*"
       ],
       "js": [
+        "universal/tools.js",
         "seneca/auth/index.js",
         "seneca/universal.js"
       ],
@@ -38,6 +39,7 @@
         "*://app.senecalearning.com/dashboard"
       ],
       "js": [
+        "universal/tools.js",
         "seneca/app/index.js",
         "seneca/universal.js"
       ],
@@ -52,6 +54,8 @@
         "*://maths.sparx-learning.com/*"
       ],
       "js": [
+        "universal/tools.js",
+        "sparx/maths/tool-config.js",
         "sparx/maths/index.js",
         "sparx/universal.js"
       ],
@@ -66,6 +70,8 @@
         "*://reader.sparx-learning.com/*"
       ],
       "js": [
+        "universal/tools.js",
+        "sparx/reader/tool-config.js",
         "sparx/reader/index.js",
         "sparx/universal.js"
       ],
@@ -80,6 +86,8 @@
         "*://science.sparx-learning.com/*"
       ],
       "js": [
+        "universal/tools.js",
+        "sparx/science/tool-config.js",
         "sparx/science/index.js",
         "sparx/universal.js"
       ],
@@ -94,6 +102,7 @@
         "*://auth.sparx-learning.com/*"
       ],
       "js": [
+        "universal/tools.js",
         "sparx/auth/index.js",
         "sparx/universal.js"
       ],
@@ -108,14 +117,27 @@
         "<all_urls>"
       ],
       "js": [
-        "universal/leak_menu.js",
-        "universal/ai/chatbot.js"
+        "universal/tools.js",
+        "universal/tools/leak_menu/leak_menu.js",
+        "universal/tools/chatbot/chatbot.js",
+        "universal/tools/math_helper/math_helper.js"
       ],
       "css": [
-        "universal/leak_menu.css",
-        "universal/ai/chatbot.css"
+        "universal/tools/leak_menu/leak_menu.css",
+        "universal/tools/chatbot/chatbot.css",
+        "universal/tools/math_helper/math_helper.css"
       ],
       "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "universal/tools/leak_menu/leak_menu.html",
+        "universal/tools/chatbot/chatbot.html",
+        "universal/tools/math_helper/math_helper.html"
+      ],
+      "matches": ["<all_urls>"]
     }
   ]
 }

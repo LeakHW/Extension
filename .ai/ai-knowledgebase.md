@@ -7,11 +7,18 @@ Leak is a universal homework helper extension designed for Seneca Learning and S
 ## Core Architecture
 
 - **Universal Components (`src/universal`)**: Components that run on all URLs.
-  - **Leak Menu (`leak_menu.js/css`)**: The main control center, appearing in the middle of the screen. Triggered by the extension icon or "Leak" buttons on platforms.
-  - **AI Chatbot (`ai/chatbot.js/css`)**: A toggleable assistant in the bottom-right corner.
-- **Platform Specifics**:
-  - **Seneca (`src/seneca`)**: Dashboard and authentication specific logic.
-  - **Sparx (`src/sparx`)**: Integration for Sparx Maths, Reader, and Science.
+  - **Universal Tool Manager (`tools.js`)**: Manages tool registration and state.
+  - **Individual Tools (`src/universal/tools/`)**: Each tool resides in its own folder.
+    - **Leak Menu (`leak_menu/`)**: The main control center, appearing in the middle of the screen. Triggered by the extension icon or "Leak" buttons on platforms.
+    - **AI Chatbot (`chatbot/`)**: A toggleable assistant in the bottom-right corner.
+    - **Math Helper (`math_helper/`)**: A specialized tool for math platforms.
+    - **AI Assistant (`ai_assistant/`)**: Logic and UI for the extension assistant (popup).
+
+## UI & Templating
+
+- **HTML Menus**: Tool menus and UI templates are stored in separate `.html` files within their respective tool folders.
+- **Dynamic Loading**: Tools fetch their HTML templates using `chrome.runtime.getURL()` and `fetch()` at runtime (for content script tools).
+- **Web Accessible Resources**: All tool HTML files used in content scripts must be declared in `manifest.json` under `web_accessible_resources`.
 
 ## State Management
 
@@ -33,8 +40,13 @@ Leak is a universal homework helper extension designed for Seneca Learning and S
 
 ## File Organization
 
-- `src/universal/`: Global logic.
-- `src/universal/ai/`: AI-specific logic (chatbot, assistant).
-- `src/sparx/`: Sparx-specific modules.
-- `src/seneca/`: Seneca-specific modules.
+- `src/universal/`: Global logic and manager.
+- `src/universal/tools/`: Individual tool folders.
+  - `leak_menu/`: Main menu UI and logic.
+  - `chatbot/`: AI Chatbot UI and logic.
+  - `math_helper/`: specialized helper for maths.
+  - `ai_assistant/`: Extension assistant UI (`ai_assistant.html`) and logic.
+- `src/sparx/`: Integration for Sparx Maths, Reader, and Science.
+- `src/seneca/`: Integration for Seneca Learning.
+  - Injects the Leak Menu button into the settings menu (targeted via `div[role="menu"]`, anchored to "Dark mode").
 - `src/background.js`: Handles extension icon clicks and message passing.

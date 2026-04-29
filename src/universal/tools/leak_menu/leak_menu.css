@@ -32,7 +32,8 @@
 
 .leak-menu-content {
     background: #ffffff;
-    width: 400px;
+    width: 500px;
+    max-width: 90vw;
     border-radius: 16px;
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
     overflow: hidden;
@@ -85,52 +86,50 @@
 
 .leak-menu-body {
     padding: 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
 }
 
-.leak-menu-section h3 {
-    margin: 0 0 8px 0;
-    font-size: 16px;
-    color: #2d3748;
-    font-weight: 700;
-}
-
-.leak-menu-section p {
-    margin: 0 0 16px 0;
-    font-size: 14px;
-    color: #718096;
-    line-height: 1.5;
-}
-
-.leak-menu-button {
+.leak-menu-tool-btn {
     background: #f7fafc;
     border: 1.5px solid #e2e8f0;
     color: #2d3748;
-    padding: 10px 16px;
-    border-radius: 8px;
-    font-weight: 600;
+    padding: 16px;
+    border-radius: 12px;
+    font-weight: 700;
     cursor: pointer;
-    transition: all 0.2s;
-    width: 100%;
-    font-size: 14px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 15px;
     text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60px;
 }
 
-.leak-menu-button:hover {
+.leak-menu-tool-btn:hover {
     background: #edf2f7;
     border-color: #cbd5e0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-.leak-menu-button.enabled {
+.leak-menu-tool-btn.enabled {
     background: #ebf8ff;
     border-color: #3182ce;
     color: #3182ce;
+    box-shadow: 0 4px 12px rgba(49, 130, 206, 0.1);
 }
 
-.leak-menu-button.enabled:hover {
+.leak-menu-tool-btn.enabled:hover {
     background: #bee3f8;
+    border-color: #2b6cb0;
+}
+
+/* Remove old styles */
+.leak-menu-section {
+    display: none;
 }
 
 .leak-menu-footer {

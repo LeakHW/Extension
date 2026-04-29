@@ -15,41 +15,34 @@
      * UNIVERSAL AI CHATBOT HANDLER
      * This script handles the AI chatbot that appears in the bottom-right corner.
      */
+    let currentConfig = {};
 
-    const createChatbot = () => {
+    const createChatbot = async (config) => {
         if (document.getElementById('leak-ai-chatbot-container')) return;
+        currentConfig = config || {};
 
         const container = document.createElement('div');
         container.id = 'leak-ai-chatbot-container';
         container.className = 'leak-ai-chatbot-container';
         
-        container.innerHTML = `
-            <div class="leak-ai-chatbot-window">
-                <div class="leak-ai-chatbot-header">
-                    <span>Leak AI Chatbot</span>
-                    <button class="leak-ai-chatbot-close">&times;</button>
-                </div>
-                <div class="leak-ai-chatbot-body">
-                    <div class="leak-ai-chatbot-field">
-                        <label for="leak-ai-chatbot-token">API Token</label>
-                        <input type="password" id="leak-ai-chatbot-token" class="leak-ai-chatbot-input" placeholder="Paste your Tye token...">
-                    </div>
-                    <div class="leak-ai-chatbot-field">
-                        <label for="leak-ai-chatbot-prompt">Your Question</label>
-                        <textarea id="leak-ai-chatbot-prompt" class="leak-ai-chatbot-input leak-ai-chatbot-textarea" placeholder="How can I help you today?"></textarea>
-                    </div>
-                    <button class="leak-ai-chatbot-send">Ask AI</button>
-                    <div class="leak-ai-chatbot-loading">
-                        <div class="leak-ai-chatbot-spinner"></div>
-                        <span>Consulting Tye AI...</span>
-                    </div>
-                    <div class="leak-ai-chatbot-response"></div>
-                    <div class="leak-ai-chatbot-footer">
-                        Powered by Tye
-                    </div>
-                </div>
-            </div>
-        `;
+        try {
+            const response = await fetch(chrome.runtime.getURL('universal/tools/chatbot/chatbot.html'));
+            const html = await response.text();
+            container.innerHTML = html;
+            
+            // Update title and placeholder if provided
+            const titleEl = container.querySelector('#leak-chatbot-title-text');
+            if (titleEl && currentConfig.title) {
+                titleEl.textContent = currentConfig.title;
+            }
+            const promptInputEl = container.querySelector('#leak-ai-chatbot-prompt');
+            if (promptInputEl && currentConfig.placeholder) {
+                promptInputEl.placeholder = currentConfig.placeholder;
+            }
+        } catch (error) {
+            console.error('Leak: Failed to load chatbot HTML', error);
+            return;
+        }
 
         document.body.appendChild(container);
 
@@ -157,21 +150,21 @@
     };
 
     // Global function to toggle chatbot
-    window.toggleLeakChatbot = (enable) => {
-        createChatbot();
-        const container = document.getElementById('leak-ai-chatbot-container');
+    window.toggleLeakChatbot = async (enable) => {
         if (enable) {
-            container.classList.add('active');
+            await createChatbot(currentConfig);
+            const container = document.getElementById('leak-ai-chatbot-container');
+            if (container) container.classList.add('active');
         } else {
-            container.classList.remove('active');
+            const container = document.getElementById('leak-ai-chatbot-container');
+            if (container) container.classList.remove('active');
         }
     };
 
-    // Check saved state on load (site-specific)
-    const hostname = window.location.hostname;
-    chrome.storage.local.get([`leak_chatbot_enabled_${hostname}`], (result) => {
-        if (result[`leak_chatbot_enabled_${hostname}`]) {
-            window.toggleLeakChatbot(true);
-        }
-    });
+    // Register as tool
+    if (window.Leak) {
+        window.Leak.registerTool('chatbot', (isEnabled) => {
+            window.toggleLeakChatbot(isEnabled);
+        });
+    }
 })();
