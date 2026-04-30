@@ -24,6 +24,7 @@
       ],
       "js": [
         "universal/tools.js",
+        "seneca/auth/tool-config.js",
         "seneca/auth/index.js",
         "seneca/universal.js"
       ],
@@ -40,6 +41,7 @@
       ],
       "js": [
         "universal/tools.js",
+        "seneca/app/tool-config.js",
         "seneca/app/index.js",
         "seneca/universal.js"
       ],
@@ -120,12 +122,17 @@
         "universal/tools.js",
         "universal/tools/leak_menu/leak_menu.js",
         "universal/tools/chatbot/chatbot.js",
-        "universal/tools/math_helper/math_helper.js"
+        "universal/tools/example/example.js",
+        "universal/tools/data_collector/data_collector.js",
+        "universal/tools/bookwork_helper/bookwork_helper.js",
+        "universal/tools/dev_info/dev_info.js",
+        "universal/tools/text_selector/text_selector.js"
       ],
       "css": [
         "universal/tools/leak_menu/leak_menu.css",
         "universal/tools/chatbot/chatbot.css",
-        "universal/tools/math_helper/math_helper.css"
+        "universal/tools/example/example.css",
+        "universal/tools/dev_info/dev_info.css"
       ],
       "run_at": "document_idle"
     }
@@ -135,7 +142,7 @@
       "resources": [
         "universal/tools/leak_menu/leak_menu.html",
         "universal/tools/chatbot/chatbot.html",
-        "universal/tools/math_helper/math_helper.html"
+        "universal/tools/example/example.html"
       ],
       "matches": ["<all_urls>"]
     }

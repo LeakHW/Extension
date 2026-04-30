@@ -38,19 +38,106 @@
             if (titleEl && currentConfig.title) {
                 titleEl.textContent = currentConfig.title;
             }
+
+            // Set version from manifest
+            const versionEl = container.querySelector('#leak-version-number');
+            if (versionEl) {
+                versionEl.textContent = chrome.runtime.getManifest().version;
+            }
         } catch (error) {
-            console.error('Leak: Failed to load menu HTML', error);
+            window.Leak.error('Failed to load menu HTML', error);
             container.innerHTML = `<div class="leak-menu-content"><p>Error loading menu.</p></div>`;
         }
 
         document.body.appendChild(container);
-        updateToolList();
+        
+        updateCategorySidebar();
+        updateSettingsList();
+        updateDeveloperList();
 
         // Add event listeners
         const closeBtn = container.querySelector('.leak-menu-close');
+        const footerToolsBtn = container.querySelector('#leak-footer-tools-btn');
+        const footerAboutBtn = container.querySelector('#leak-footer-about-btn');
+        const footerSettingsBtn = container.querySelector('#leak-footer-settings-btn');
+        const footerDevBtn = container.querySelector('#leak-footer-dev-btn');
+
+        const views = {
+            tools: container.querySelector('#leak-menu-tools-view'),
+            settings: container.querySelector('#leak-menu-settings-view'),
+            about: container.querySelector('#leak-menu-about-view'),
+            developer: container.querySelector('#leak-menu-developer-view')
+        };
+
+        const switchView = (viewName) => {
+            Object.keys(views).forEach(v => {
+                if (views[v]) views[v].style.display = 'none';
+            });
+            if (views[viewName]) {
+                views[viewName].style.display = 'grid';
+            }
+
+            // Update footer icon states
+            [footerToolsBtn, footerAboutBtn, footerSettingsBtn, footerDevBtn].forEach(btn => btn?.classList.remove('active'));
+            if (viewName === 'tools') footerToolsBtn?.classList.add('active');
+            if (viewName === 'about') footerAboutBtn?.classList.add('active');
+            if (viewName === 'settings') footerSettingsBtn?.classList.add('active');
+            if (viewName === 'developer') footerDevBtn?.classList.add('active');
+
+            // Hide sidebar if not in tools view
+            const sidebar = container.querySelector('#leak-menu-category-sidebar');
+            if (sidebar) {
+                sidebar.style.display = viewName === 'tools' ? 'flex' : 'none';
+            }
+
+            // If switching back to tools, ensure a category is selected
+            if (viewName === 'tools') {
+                const activeCat = container.querySelector('.leak-sidebar-item.active');
+                if (!activeCat) {
+                    const firstCat = container.querySelector('.leak-sidebar-item');
+                    if (firstCat) firstCat.click();
+                }
+            } else {
+                // Clear active sidebar state when in settings/about
+                container.querySelectorAll('.leak-sidebar-item').forEach(i => i.classList.remove('active'));
+            }
+        };
 
         closeBtn.addEventListener('click', () => {
             window.hideLeakMenu();
+        });
+
+        footerToolsBtn?.addEventListener('click', () => switchView('tools'));
+        footerAboutBtn?.addEventListener('click', () => switchView('about'));
+        footerSettingsBtn?.addEventListener('click', () => switchView('settings'));
+        footerDevBtn?.addEventListener('click', () => switchView('developer'));
+
+        // Version click for dev mode
+        let versionClicks = 0;
+        const versionNum = container.querySelector('#leak-version-number');
+        if (versionNum) {
+            versionNum.addEventListener('click', () => {
+                versionClicks++;
+                if (versionClicks >= 10) {
+                    chrome.storage.local.get(['leak_dev_mode'], (res) => {
+                        if (!res.leak_dev_mode) {
+                            chrome.storage.local.set({ 'leak_dev_mode': true }, () => {
+                                window.Leak.log('Developer mode activated!');
+                                if (footerDevBtn) footerDevBtn.style.display = 'flex';
+                                alert('Developer mode activated!');
+                            });
+                        }
+                    });
+                    versionClicks = 0;
+                }
+            });
+        }
+
+        // Check dev mode on load
+        chrome.storage.local.get(['leak_dev_mode'], (result) => {
+            if (result['leak_dev_mode']) {
+                if (footerDevBtn) footerDevBtn.style.display = 'flex';
+            }
         });
 
         // Close on overlay click
@@ -59,50 +146,265 @@
                 window.hideLeakMenu();
             }
         });
+
+        // Initial view
+        switchView('tools');
     };
 
-    const updateToolList = () => {
+    const updateCategorySidebar = () => {
+        const sidebar = document.getElementById('leak-menu-category-sidebar');
+        if (!sidebar || !window.Leak) return;
+
+        sidebar.innerHTML = '';
+        const enabledTools = window.Leak.getEnabledTools();
+        
+        // Get unique categories
+        const categories = [...new Set(enabledTools
+            .filter(t => t.id !== 'leak_menu')
+            .map(t => t.category || 'General')
+        )].sort((a, b) => {
+            // Sort 'General' or others to the end, specialized categories to front
+            if (a === 'General') return 1;
+            if (b === 'General') return -1;
+            return a.localeCompare(b);
+        });
+
+        categories.forEach((cat, index) => {
+            const item = document.createElement('button');
+            item.className = 'leak-sidebar-item';
+            item.textContent = cat;
+            item.addEventListener('click', () => {
+                sidebar.querySelectorAll('.leak-sidebar-item').forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+                
+                // Switch to tools view if not already there
+                const toolsView = document.getElementById('leak-menu-tools-view');
+                if (toolsView.style.display === 'none') {
+                    // This logic is a bit circular, but switchView handles the rest
+                    const aboutBtn = document.getElementById('leak-footer-about-btn');
+                    const settingsBtn = document.getElementById('leak-footer-settings-btn');
+                    const devBtn = document.getElementById('leak-footer-dev-btn');
+                    [aboutBtn, settingsBtn, devBtn].forEach(b => b?.classList.remove('active'));
+                    
+                    document.querySelectorAll('.leak-menu-body').forEach(v => v.style.display = 'none');
+                    toolsView.style.display = 'grid';
+                }
+
+                updateToolList(cat);
+            });
+            sidebar.appendChild(item);
+
+            // Select first category by default
+            if (index === 0) item.click();
+        });
+    };
+
+    const updateToolList = (category) => {
         const toolList = document.getElementById('leak-menu-tool-list');
         if (!toolList || !window.Leak) return;
 
-        const enabledTools = window.Leak.getEnabledTools();
-        toolList.innerHTML = '';
+        chrome.storage.local.get(['leak_dev_mode'], (devResult) => {
+            const isDevMode = devResult['leak_dev_mode'] || false;
+            const enabledTools = window.Leak.getEnabledTools();
+            toolList.innerHTML = '';
 
-        enabledTools.forEach(tool => {
-            // Special case: leak_menu itself doesn't need a toggle in its own menu
-            if (tool.id === 'leak_menu') return;
+            const filteredTools = enabledTools.filter(tool => {
+                if (tool.id === 'leak_menu') return false;
+                if (tool.devOnly && !isDevMode) return false;
+                const toolCat = tool.category || 'General';
+                return toolCat === category;
+            });
 
-            const hostname = window.location.hostname;
-            const storageKey = `leak_tool_${tool.id}_enabled_${hostname}`;
-            
-            chrome.storage.local.get([storageKey], (result) => {
-                const isEnabled = result[storageKey] || false;
+            filteredTools.forEach(tool => {
+                const hostname = window.location.hostname;
+                const storageKey = `leak_tool_${tool.id}_enabled_${hostname}`;
                 
-                const btn = document.createElement('button');
-                btn.id = `leak-toggle-${tool.id}`;
-                btn.className = `leak-menu-tool-btn ${isEnabled ? 'enabled' : ''}`;
-                btn.textContent = tool.label || tool.id;
-
-                toolList.appendChild(btn);
-
-                btn.addEventListener('click', () => {
-                    const newState = !btn.classList.contains('enabled');
-                    window.Leak.toggleTool(tool.id, newState);
+                chrome.storage.local.get([storageKey], (result) => {
+                    const isEnabled = result[storageKey] || false;
                     
-                    // Update UI
-                    btn.classList.toggle('enabled', newState);
+                    const btn = document.createElement('button');
+                    btn.id = `leak-toggle-${tool.id}`;
+                    btn.className = `leak-menu-tool-btn ${isEnabled ? 'enabled' : ''}`;
                     
-                    // Close menu if it's the chatbot being enabled for better UX
-                    if (tool.id === 'chatbot' && newState) {
-                        window.hideLeakMenu();
-                    }
+                    // Use tool icon if provided, otherwise no icon (cleaner look)
+                    const iconHtml = tool.icon ? `<div class="leak-tool-icon">${tool.icon}</div>` : '';
+                    
+                    btn.innerHTML = `
+                        ${iconHtml}
+                        <div class="leak-tool-label">${tool.label || tool.id}</div>
+                    `;
+
+                    toolList.appendChild(btn);
+
+                    btn.addEventListener('click', () => {
+                        const newState = !btn.classList.contains('enabled');
+                        window.Leak.toggleTool(tool.id, newState);
+                        btn.classList.toggle('enabled', newState);
+                        if (tool.id === 'chatbot' && newState) window.hideLeakMenu();
+                    });
+                });
+            });
+
+            if (filteredTools.length === 0) {
+                toolList.innerHTML = '<div class="leak-menu-section" style="grid-column: span 3; display: block;"><p>No tools in this category.</p></div>';
+            }
+        });
+    };
+
+    const updateSettingsList = () => {
+        const settingsList = document.getElementById('leak-menu-settings-list');
+        if (!settingsList) return;
+
+        settingsList.innerHTML = '';
+
+        const settings = [
+            {
+                id: 'collect_data',
+                label: 'Collect question data',
+                description: 'Collect question data to help improve Leak.',
+                default: true,
+                section: 'Main'
+            },
+            {
+                id: 'collect_data_verbose',
+                label: 'Verbose Data Collection',
+                description: 'Enable detailed logging of captured data parts (slots, inputs, etc.)',
+                default: false,
+                section: 'Optional Features'
+            },
+            {
+                id: 'auto_capture',
+                label: 'Auto-Capture on Submit',
+                description: 'Automatically capture answers when clicking submit.',
+                default: true,
+                section: 'Optional Features'
+            }
+        ];
+
+        let currentSection = '';
+
+        settings.forEach(setting => {
+            if (setting.section && setting.section !== currentSection) {
+                currentSection = setting.section;
+                const sectionTitle = document.createElement('div');
+                sectionTitle.className = 'leak-menu-section-title';
+                sectionTitle.style.marginTop = '16px';
+                sectionTitle.style.fontSize = '14px';
+                sectionTitle.style.color = '#718096';
+                sectionTitle.textContent = currentSection;
+                settingsList.appendChild(sectionTitle);
+            }
+
+            const item = document.createElement('div');
+            item.className = 'leak-setting-item';
+            
+            chrome.storage.local.get([`leak_setting_${setting.id}`], (result) => {
+                const isEnabled = result[`leak_setting_${setting.id}`] !== undefined ? result[`leak_setting_${setting.id}`] : setting.default;
+                
+                item.innerHTML = `
+                    <div class="leak-setting-info">
+                        <span class="leak-setting-label">${setting.label}</span>
+                        <span class="leak-setting-desc">${setting.description}</span>
+                    </div>
+                    <label class="leak-switch">
+                        <input type="checkbox" id="leak-setting-input-${setting.id}" ${isEnabled ? 'checked' : ''}>
+                        <span class="leak-slider"></span>
+                    </label>
+                `;
+
+                settingsList.appendChild(item);
+
+                const input = item.querySelector('input');
+                input.addEventListener('change', () => {
+                    const update = {};
+                    update[`leak_setting_${setting.id}`] = input.checked;
+                    chrome.storage.local.set(update);
                 });
             });
         });
+    };
 
-        if (enabledTools.length <= 1) { // only leak_menu or nothing
-            toolList.innerHTML = '<div class="leak-menu-section"><p>No tools enabled for this site.</p></div>';
-        }
+    const updateDeveloperList = () => {
+        const devList = document.getElementById('leak-menu-developer-list');
+        if (!devList) return;
+
+        devList.innerHTML = '';
+
+        const devTools = [
+            {
+                id: 'dev_mode',
+                label: 'Developer Mode',
+                description: 'Toggle developer mode visibility in sidebar.',
+                type: 'toggle',
+                storageKey: 'leak_dev_mode'
+            },
+            {
+                id: 'debug_logging',
+                label: 'Global Debug Logging',
+                description: 'Enable verbose logging across all tools.',
+                type: 'toggle',
+                storageKey: 'leak_debug_logging'
+            },
+            {
+                id: 'clear_storage',
+                label: 'Clear All Leak Storage',
+                description: 'Resets all settings and cached data.',
+                type: 'button',
+                action: () => {
+                    if (confirm('Are you sure you want to clear all Leak storage?')) {
+                        chrome.storage.local.clear(() => {
+                            alert('Storage cleared. Please refresh.');
+                            window.location.reload();
+                        });
+                    }
+                }
+            }
+        ];
+
+        devTools.forEach(tool => {
+            const item = document.createElement('div');
+            item.className = 'leak-setting-item';
+
+            if (tool.type === 'toggle') {
+                chrome.storage.local.get([tool.storageKey], (result) => {
+                    const isEnabled = result[tool.storageKey] || false;
+                    item.innerHTML = `
+                        <div class="leak-setting-info">
+                            <span class="leak-setting-label">${tool.label}</span>
+                            <span class="leak-setting-desc">${tool.description}</span>
+                        </div>
+                        <label class="leak-switch">
+                            <input type="checkbox" id="leak-dev-input-${tool.id}" ${isEnabled ? 'checked' : ''}>
+                            <span class="leak-slider"></span>
+                        </label>
+                    `;
+                    devList.appendChild(item);
+
+                    const input = item.querySelector('input');
+                    input.addEventListener('change', () => {
+                        const update = {};
+                        update[tool.storageKey] = input.checked;
+                        chrome.storage.local.set(update, () => {
+                            if (tool.id === 'dev_mode' && !input.checked) {
+                                // Close dev view if it was active
+                                document.getElementById('leak-footer-dev-btn').style.display = 'none';
+                                document.getElementById('leak-footer-settings-btn').click();
+                            }
+                        });
+                    });
+                });
+            } else if (tool.type === 'button') {
+                item.innerHTML = `
+                    <div class="leak-setting-info">
+                        <span class="leak-setting-label">${tool.label}</span>
+                        <span class="leak-setting-desc">${tool.description}</span>
+                    </div>
+                    <button class="leak-menu-tool-btn" style="min-height: 40px; padding: 8px 16px;">Run</button>
+                `;
+                devList.appendChild(item);
+                item.querySelector('button').addEventListener('click', tool.action);
+            }
+        });
     };
 
     // Global functions to show/hide menu

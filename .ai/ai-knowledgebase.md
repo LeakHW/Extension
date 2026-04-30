@@ -11,11 +11,14 @@ Leak is a universal homework helper extension designed for Seneca Learning and S
   - **Individual Tools (`src/universal/tools/`)**: Each tool resides in its own folder.
     - **Leak Menu (`leak_menu/`)**: The main control center, appearing in the middle of the screen. Triggered by the extension icon or "Leak" buttons on platforms.
     - **AI Chatbot (`chatbot/`)**: A toggleable assistant in the bottom-right corner.
-    - **Math Helper (`math_helper/`)**: A specialized tool for math platforms.
+    - **Example Tool (`example/`)**: A template and example for creating new tools.
+    - **Data Collector (`data_collector/`)**: Collects Sparx Maths question data and images when enabled in settings.
+    - **Bookwork Helper (`bookwork_helper/`)**: Automatically tracks bookwork codes and user-inputted answers on Sparx Maths.
     - **AI Assistant (`ai_assistant/`)**: Logic and UI for the extension assistant (popup).
 
 ## UI & Templating
 
+- **Settings System**: A centralized settings view in the `leak_menu` allows toggling global behaviors like "Collect question data".
 - **HTML Menus**: Tool menus and UI templates are stored in separate `.html` files within their respective tool folders.
 - **Dynamic Loading**: Tools fetch their HTML templates using `chrome.runtime.getURL()` and `fetch()` at runtime (for content script tools).
 - **Web Accessible Resources**: All tool HTML files used in content scripts must be declared in `manifest.json` under `web_accessible_resources`.
@@ -42,11 +45,16 @@ Leak is a universal homework helper extension designed for Seneca Learning and S
 
 - `src/universal/`: Global logic and manager.
 - `src/universal/tools/`: Individual tool folders.
-  - `leak_menu/`: Main menu UI and logic.
-  - `chatbot/`: AI Chatbot UI and logic.
-  - `math_helper/`: specialized helper for maths.
-  - `ai_assistant/`: Extension assistant UI (`ai_assistant.html`) and logic.
+    - `leak_menu/`: Main menu UI and logic.
+    - `chatbot/`: AI Chatbot UI and logic.
+    - `example/`: Example tool UI and logic.
+    - `data_collector/`: Question data gathering.
+    - `bookwork_helper/`: Bookwork code and answer tracker.
+    - `ai_assistant/`: Extension assistant UI (`ai_assistant.html`) and logic.
 - `src/sparx/`: Integration for Sparx Maths, Reader, and Science.
+    - `maths/`: Enabled with `chatbot`, `example`, `data_collector`, and `bookwork_helper`.
 - `src/seneca/`: Integration for Seneca Learning.
-  - Injects the Leak Menu button into the settings menu (targeted via `div[role="menu"]`, anchored to "Dark mode").
+  - Uses `tool-config.js` for app and auth modules.
+  - Injects the Leak Menu button into the settings menu (targeted via `div[role="menu"]` or `#session-settings-popup`, anchored to "Dark mode").
+  - Matches Seneca's styled-component structure using `sc-dkrFOg` classes for seamless UI integration.
 - `src/background.js`: Handles extension icon clicks and message passing.

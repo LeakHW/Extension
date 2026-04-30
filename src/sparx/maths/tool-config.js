@@ -22,11 +22,48 @@
             {
                 id: 'chatbot',
                 label: 'AI Assistant',
+                category: 'AI',
                 description: 'Get help with your Maths homework using Tye AI.',
                 config: {
                     title: 'Maths AI Assistant',
                     placeholder: 'How can I help with Maths?'
                 }
+            },
+            {
+                id: 'example',
+                label: 'Example Tool',
+                category: 'Templates',
+                description: 'A template for creating new Leak tools.',
+                config: {}
+            },
+            {
+                id: 'data_collector',
+                label: 'Data Collector',
+                category: 'Automation',
+                description: 'Collects question data for our database.',
+                config: {}
+            },
+            {
+                id: 'bookwork_helper',
+                label: 'Bookwork Helper',
+                category: 'Helpers',
+                description: 'Keeps track of bookwork codes and answers.',
+                config: {}
+            },
+            {
+                id: 'text_selector',
+                label: 'Text Selector',
+                category: 'Helpers',
+                description: 'Enable selection and copying on restricted elements.',
+                config: {}
+            },
+            {
+                id: 'dev_info',
+                label: 'DOM Info (Debug)',
+                category: 'Debug',
+                description: 'Show info about hovered elements.',
+                config: {},
+                devOnly: true
             }
         ],
         injection: {

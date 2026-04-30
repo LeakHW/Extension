@@ -40,7 +40,7 @@
                 promptInputEl.placeholder = currentConfig.placeholder;
             }
         } catch (error) {
-            console.error('Leak: Failed to load chatbot HTML', error);
+            window.Leak.error('Failed to load chatbot HTML', error);
             return;
         }
 
@@ -56,10 +56,11 @@
 
         closeBtn.addEventListener('click', () => {
             container.classList.remove('active');
-            // Save state: disabled for this site
+            // Save state: disabled for this site using standard tool key
             const hostname = window.location.hostname;
+            const storageKey = `leak_tool_chatbot_enabled_${hostname}`;
             const update = {};
-            update[`leak_chatbot_enabled_${hostname}`] = false;
+            update[storageKey] = false;
             chrome.storage.local.set(update);
         });
 

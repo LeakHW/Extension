@@ -69,3 +69,34 @@
 - Reorganized `src/universal` directory to include an `ai` subfolder.
 - Updated `background.js` to trigger the Leak Menu via extension icon click.
 - Integrated Leak Menu triggering across all Sparx platforms (Maths, Reader, Science).
+
+## [2026-04-30] - Leak Extension Overhaul & Debug Suite
+
+**Model:** Gemini-3-Flash-Preview
+**AI:** Trae IDE
+
+### Added
+
+- **New UI Framework**: Overhauled the Leak Menu with a taller layout, sidebar categories, and footer icon navigation.
+- **Answer Capture Refinement**: Improved capture logic for Sparx Maths with support for slots, dynamic classes, and verbose logging.
+- **Developer Suite**: Added "Dev Mode" activated by clicking the version number 10 times. Includes:
+  - **DOM Info Tool**: Hover-based element inspector.
+  - **Global Debug Logging**: Settings-controlled verbose output.
+  - **Storage Management**: Button to clear all extension data.
+- **Branding & Logging**: Centralized logging system with styled `[LEAK]` prefix and a teal gradient ASCII logo on startup.
+- **Cross-Tab Sync**: Implemented a storage listener to keep tool states in sync across multiple browser tabs.
+
+### Changed
+
+- Reorganized settings into "Main" and "Optional Features" sections.
+- Improved selector robustness in `data_collector` and `bookwork_helper` to avoid noise and handle dynamic hashes.
+- Standardized tool registration to include categories (AI, Automation, Helpers, Debug).
+
+### Fixed
+
+- Fixed `ReferenceError` in `leak_menu.js` causing crashes when opening settings.
+- Fixed storage key mismatch in `chatbot.js` that prevented state syncing with the menu.
+- Audited and standardized `z-index` across all UI overlays (Menu: 10M, Chatbot: 9.9M).
+- Fixed unstyled console messages by migrating all tools to `window.Leak.log/debug/warn/error`.
+- Polished Leak Menu layout: reduced sidebar width, optimized tool grid for better space utilization, and added bottom spacing for better UX.
+- Added **Text Selector** tool: A universal helper that forces elements to be selectable and enables copying on restricted sites.

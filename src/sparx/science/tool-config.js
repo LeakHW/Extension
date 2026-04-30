@@ -22,11 +22,19 @@
             {
                 id: 'chatbot',
                 label: 'AI Assistant',
+                category: 'AI',
                 description: 'Get help with your Science homework using Tye AI.',
                 config: {
                     title: 'Science AI Assistant',
                     placeholder: 'How can I help with Science?'
                 }
+            },
+            {
+                id: 'text_selector',
+                label: 'Text Selector',
+                category: 'Helpers',
+                description: 'Enable selection and copying on restricted elements.',
+                config: {}
             }
         ],
         injection: {

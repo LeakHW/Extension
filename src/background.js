@@ -26,9 +26,16 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         // Forward the message to the content script in the same tab
         if (sender.tab && sender.tab.id) {
             chrome.tabs.sendMessage(sender.tab.id, { action: "open_leak_popup" }, (response) => {
-                sendResponse({ status: "forwarded", details: response });
+                // Check for errors to prevent "message channel closed" warnings
+                if (chrome.runtime.lastError) {
+                    sendResponse({ status: "error", message: chrome.runtime.lastError.message });
+                } else {
+                    sendResponse({ status: "forwarded", details: response });
+                }
             });
             return true; // Keep the message channel open for async response
+        } else {
+            sendResponse({ status: "error", message: "No active tab found in sender" });
         }
     }
 });

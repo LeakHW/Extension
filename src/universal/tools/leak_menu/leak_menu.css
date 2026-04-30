@@ -18,7 +18,7 @@
     height: 100%;
     background: rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(4px);
-    z-index: 9999998;
+    z-index: 10000001;
     display: none;
     align-items: center;
     justify-content: center;
@@ -32,7 +32,7 @@
 
 .leak-menu-content {
     background: #ffffff;
-    width: 500px;
+    width: 1000px;
     max-width: 90vw;
     border-radius: 16px;
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
@@ -86,30 +86,119 @@
 
 .leak-menu-body {
     padding: 24px;
+    padding-bottom: 40px;
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     gap: 16px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.leak-menu-container {
+    display: flex;
+    height: 550px;
+    background: #ffffff;
+}
+
+.leak-menu-sidebar {
+    width: 180px;
+    background: #f8fafc;
+    border-right: 1px solid #edf2f7;
+    display: flex;
+    flex-direction: column;
+    padding: 16px 0;
+    overflow-y: auto;
+    flex-shrink: 0;
+}
+
+.leak-sidebar-item {
+    background: none;
+    border: none;
+    padding: 10px 16px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 700;
+    color: #718096;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-left: 3px solid transparent;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.leak-sidebar-item:hover {
+    background: #f1f5f9;
+    color: #3182ce;
+}
+
+.leak-sidebar-item.active {
+    background: #ebf8ff;
+    color: #3182ce;
+    border-left-color: #3182ce;
+}
+
+.leak-menu-main {
+    flex: 1;
+    overflow-y: auto;
+    display: block;
+    background: #ffffff;
+    width: 100%;
+}
+
+.leak-about-content {
+    grid-column: span 2;
+    color: #4a5568;
+    line-height: 1.6;
+}
+
+.leak-version-clickable {
+    font-weight: 700;
+    color: #3182ce;
+    cursor: pointer;
+    user-select: none;
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.leak-version-clickable:hover {
+    background: #ebf8ff;
+}
+
+.leak-version-clickable:active {
+    background: #bee3f8;
+}
+
+.leak-footer-status {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #a0aec0;
 }
 
 .leak-menu-tool-btn {
-    background: #f7fafc;
-    border: 1.5px solid #e2e8f0;
-    color: #2d3748;
-    padding: 16px;
-    border-radius: 12px;
-    font-weight: 700;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    color: #4a5568;
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    font-size: 15px;
+    transition: all 0.2s ease;
+    font-size: 13px;
     text-align: center;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     min-height: 60px;
+    gap: 8px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .leak-menu-tool-btn:hover {
-    background: #edf2f7;
+    background: #ffffff;
     border-color: #cbd5e0;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
@@ -132,12 +221,180 @@
     display: none;
 }
 
+.leak-footer-icon-btn {
+    background: none;
+    border: none;
+    color: #a0aec0;
+    cursor: pointer;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    border-radius: 8px;
+}
+
+.leak-footer-icon-btn:hover {
+    color: #3182ce;
+    background: #ebf8ff;
+}
+
+.leak-footer-icon-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+.leak-footer-icon-btn.active {
+    color: #3182ce;
+    background: #ebf8ff;
+}
+
+.leak-menu-footer-right {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
 .leak-menu-footer {
-    padding: 16px 24px;
+    padding: 12px 24px;
     background: #f8fafc;
     border-top: 1px solid #edf2f7;
-    font-size: 12px;
-    color: #a0aec0;
-    text-align: center;
+    font-size: 13px;
+    color: #718096;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     font-weight: 600;
+}
+
+.leak-menu-footer-left {
+    opacity: 0.8;
+}
+
+.leak-menu-settings-toggle {
+    background: none;
+    border: none;
+    color: #a0aec0;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    transition: all 0.2s;
+}
+
+.leak-menu-settings-toggle:hover {
+    color: #3182ce;
+    transform: rotate(30deg);
+}
+
+.leak-menu-footer-icon {
+    width: 18px;
+    height: 18px;
+}
+
+.leak-menu-section-title {
+    grid-column: span 2;
+    font-size: 18px;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 8px;
+}
+
+.leak-menu-back-btn {
+    grid-column: span 2;
+    margin-top: 16px;
+    background: #e2e8f0;
+    border: none;
+    color: #4a5568;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.leak-menu-back-btn:hover {
+    background: #cbd5e0;
+}
+
+/* Settings List Styles */
+#leak-menu-settings-list {
+    grid-column: span 2;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.leak-setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #edf2f7;
+}
+
+.leak-setting-info {
+    flex: 1;
+    padding-right: 16px;
+}
+
+.leak-setting-label {
+    display: block;
+    font-size: 15px;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 2px;
+}
+
+.leak-setting-desc {
+    display: block;
+    font-size: 12px;
+    color: #718096;
+    font-weight: 400;
+}
+
+/* Toggle Switch */
+.leak-switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+}
+
+.leak-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.leak-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #cbd5e0;
+    transition: .3s;
+    border-radius: 24px;
+}
+
+.leak-slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .3s;
+    border-radius: 50%;
+}
+
+input:checked + .leak-slider {
+    background-color: #3182ce;
+}
+
+input:checked + .leak-slider:before {
+    transform: translateX(20px);
 }

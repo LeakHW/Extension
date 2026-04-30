@@ -22,11 +22,19 @@
             {
                 id: 'chatbot',
                 label: 'AI Assistant',
+                category: 'AI',
                 description: 'Get help with your Reading homework using Tye AI.',
                 config: {
                     title: 'Reader AI Assistant',
                     placeholder: 'How can I help with Reading?'
                 }
+            },
+            {
+                id: 'text_selector',
+                label: 'Text Selector',
+                category: 'Helpers',
+                description: 'Enable selection and copying on restricted elements.',
+                config: {}
             }
         ],
         injection: {

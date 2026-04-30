@@ -8,10 +8,67 @@
         </div>
         <button class="leak-menu-close">&times;</button>
     </div>
-    <div class="leak-menu-body" id="leak-menu-tool-list">
-        <!-- Tools will be injected here dynamically -->
+    
+    <div class="leak-menu-container">
+        <div class="leak-menu-sidebar" id="leak-menu-category-sidebar">
+            <!-- Categories will be injected here -->
+        </div>
+        
+        <div class="leak-menu-main">
+            <div class="leak-menu-body" id="leak-menu-tools-view">
+                <div id="leak-menu-tool-list">
+                    <!-- Tools will be injected here dynamically -->
+                </div>
+            </div>
+            
+            <div class="leak-menu-body" id="leak-menu-settings-view" style="display: none;">
+                <div class="leak-menu-section-title">Settings</div>
+                <div id="leak-menu-settings-list">
+                    <!-- Settings will be injected here -->
+                </div>
+            </div>
+            
+            <div class="leak-menu-body" id="leak-menu-about-view" style="display: none;">
+                <div class="leak-menu-section-title">About Leak</div>
+                <div class="leak-about-content">
+                    <p>Leak is an open-source homework helper project designed to make learning more efficient.</p>
+                    <p>Version: <span id="leak-version-number" class="leak-version-clickable">1.0</span></p>
+                    <p>© LeakHW 2026 - GNU GPLv3 License</p>
+                </div>
+            </div>
+
+            <div class="leak-menu-body" id="leak-menu-developer-view" style="display: none;">
+                <div class="leak-menu-section-title">Developer Tools</div>
+                <div id="leak-menu-developer-list">
+                    <!-- Dev tools will be injected here -->
+                </div>
+            </div>
+        </div>
     </div>
+    
     <div class="leak-menu-footer">
-        Powered by Tye
+        <div class="leak-menu-footer-left">© LeakHW</div>
+        <div class="leak-menu-footer-right">
+            <button class="leak-footer-icon-btn active" id="leak-footer-tools-btn" title="Tools">
+                <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="th-large" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                    <path fill="currentColor" d="M296 32h192c13.255 0 24 10.745 24 24v160c0 13.255-10.745 24-24 24H296c-13.255 0-24-10.745-24-24V56c0-13.255 10.745-24 24-24zm-80 0H24C10.745 32 0 42.745 0 56v160c0 13.255 10.745 24 24 24h192c13.255 0 24-10.745 24-24V56c0-13.255-10.745-24-24-24zM24 272c-13.255 0-24 10.745-24 24v160c0 13.255 10.745 24 24 24h192c13.255 0 24-10.745 24-24V296c0-13.255-10.745-24-24-24H24zm272 0c-13.255 0-24 10.745-24 24v160c0 13.255 10.745 24 24 24h192c13.255 0 24-10.745 24-24V296c0-13.255-10.745-24-24-24H296z"></path>
+                </svg>
+            </button>
+            <button class="leak-footer-icon-btn" id="leak-footer-about-btn" title="About">
+                <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="info-circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                    <path fill="currentColor" d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"></path>
+                </svg>
+            </button>
+            <button class="leak-footer-icon-btn" id="leak-footer-settings-btn" title="Settings">
+                <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="cog" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                    <path fill="currentColor" d="M487.4 315.7l-42.6-24.6c2.3-23.2 2.3-46.7 0-69.9l42.6-24.6c4.9-2.8 6.7-9.1 4.1-14.1l-40.1-69.4c-2.6-4.5-8.2-6.5-13.2-4.5l-48.4 17.5c-18.7-14.3-39.7-25.1-62.1-31.9l-9.8-51c-1.1-5.7-6-9.8-11.8-9.8h-80.2c-5.8 0-10.7 4.1-11.8 9.8l-9.8 51c-22.3 6.8-43.4 17.6-62.1 31.9l-48.4-17.5c-5-2-10.6 0-13.2 4.5l-40.1 69.4c-2.6 5-0.8 11.3 4.1 14.1l42.6 24.6c-2.3 23.2-2.3 46.7 0 69.9l-42.6 24.6c-4.9 2.8-6.7 9.1-4.1 14.1l40.1 69.4c2.6 4.5 8.2 6.5 13.2 4.5l48.4-17.5c18.7 14.3 39.7 25.1 62.1 31.9l9.8 51c1.1 5.7 6 9.8 11.8 9.8h80.2c5.8 0 10.7-4.1 11.8-9.8l9.8-51c22.3-6.8 43.4-17.6 62.1-31.9l48.4 17.5c5 2 10.6 0 13.2-4.5l40.1-69.4c2.6-5 0.8-11.3-4.1-14.1zM256 336c-44.2 0-80-35.8-80-80s35.8-80 80-80 80 35.8 80 80-35.8 80-80 80z"></path>
+                </svg>
+            </button>
+            <button class="leak-footer-icon-btn" id="leak-footer-dev-btn" title="Developer" style="display: none;">
+                <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="code" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
+                    <path fill="currentColor" d="M278.9 511.1l-61-17.7c-6.4-1.8-10-8.5-8.2-14.9L346.2 8.7c1.8-6.4 8.5-10 14.9-8.2l61 17.7c6.4 1.8 10 8.5 8.2 14.9L293.8 503.3c-1.9 6.4-8.5 10.1-14.9 8.2zm-114-112.2l60.5-60.5c4.7-4.7 4.7-12.3 0-17l-131-131 131-131c4.7-4.7 4.7-12.3 0-17l-60.5-60.5c-4.7-4.7-12.3-4.7-17 0l-196 196c-4.7 4.7-4.7 12.3 0 17l196 196c4.7 4.8 12.3 4.8 17 0zm310.1 0l196-196c4.7-4.7 4.7-12.3 0-17l-196-196c-4.7-4.7-12.3-4.7-17 0l-60.5 60.5c-4.7 4.7-4.7 12.3 0 17l131 131-131 131c-4.7 4.7-4.7 12.3 0 17l60.5 60.5c4.7 4.8 12.3 4.8 17 0z"></path>
+                </svg>
+            </button>
+        </div>
     </div>
 </div>

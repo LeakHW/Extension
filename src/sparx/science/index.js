@@ -39,5 +39,7 @@
                 }
             });
         }
+
+        window.Leak.showLogo();
     }
 })();
