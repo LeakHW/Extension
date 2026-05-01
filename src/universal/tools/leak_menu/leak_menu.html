@@ -20,6 +20,13 @@
                     <!-- Tools will be injected here dynamically -->
                 </div>
             </div>
+
+            <div class="leak-menu-body" id="leak-menu-profiles-view" style="display: none;">
+                <div class="leak-menu-section-title" style="grid-column: span 2;">UI Profiles</div>
+                <div id="leak-menu-profiles-list" style="grid-column: span 2; display: flex; flex-direction: column; gap: 12px;">
+                    <!-- Profiles will be injected here -->
+                </div>
+            </div>
             
             <div class="leak-menu-body" id="leak-menu-settings-view" style="display: none;">
                 <div class="leak-menu-section-title">Settings</div>
@@ -52,6 +59,11 @@
             <button class="leak-footer-icon-btn active" id="leak-footer-tools-btn" title="Tools">
                 <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="th-large" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                     <path fill="currentColor" d="M296 32h192c13.255 0 24 10.745 24 24v160c0 13.255-10.745 24-24 24H296c-13.255 0-24-10.745-24-24V56c0-13.255 10.745-24 24-24zm-80 0H24C10.745 32 0 42.745 0 56v160c0 13.255 10.745 24 24 24h192c13.255 0 24-10.745 24-24V56c0-13.255-10.745-24-24-24zM24 272c-13.255 0-24 10.745-24 24v160c0 13.255 10.745 24 24 24h192c13.255 0 24-10.745 24-24V296c0-13.255-10.745-24-24-24H24zm272 0c-13.255 0-24 10.745-24 24v160c0 13.255 10.745 24 24 24h192c13.255 0 24-10.745 24-24V296c0-13.255-10.745-24-24-24H296z"></path>
+                </svg>
+            </button>
+            <button class="leak-footer-icon-btn" id="leak-footer-profiles-btn" title="UI Profiles">
+                <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="palette" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                    <path fill="currentColor" d="M204.3 5.7c-21.7-7.7-44.7 6.9-46.2 29.9C156.4 57.1 140 80 112 80c-17.7 0-32 14.3-32 32v16c0 17.7 14.3 32 32 32h16c17.7 0 32 14.3 32 32v128c0 53 43 96 96 96s96-43 96-96V192c0-17.7 14.3-32 32-32h16c17.7 0 32-14.3 32-32v-16c0-17.7-14.3-32-32-32c-28 0-44.4-22.9-46.1-44.4-1.5-23-24.5-37.6-46.2-29.9-18.7 6.6-39.1 10.3-60.4 10.3s-41.7-3.7-60.4-10.3z"></path>
                 </svg>
             </button>
             <button class="leak-footer-icon-btn" id="leak-footer-about-btn" title="About">

@@ -14,6 +14,10 @@
     /**
      * DATA COLLECTOR TOOL
      * Collects question data on Sparx Maths if enabled in settings.
+     * 
+     * NOTE: This tool is heavily customized for Sparx Maths selectors.
+     * If you are adding this to a new website, you MUST edit the selectors 
+     * in logData() and captureCurrentAnswer() to suit your platform.
      */
     
     if (window.Leak) {

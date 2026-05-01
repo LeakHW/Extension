@@ -29,36 +29,94 @@
 
         const calculate = () => {
             try {
-                let expr = currentExpr
-                    .replace(/÷/g, '/')
-                    .replace(/×/g, '*')
-                    .replace(/π/g, 'Math.PI')
-                    .replace(/e/g, 'Math.E')
-                    .replace(/sin\(/g, isDeg ? 'Math.sin(Math.PI/180*' : 'Math.sin(')
-                    .replace(/cos\(/g, isDeg ? 'Math.cos(Math.PI/180*' : 'Math.cos(')
-                    .replace(/tan\(/g, isDeg ? 'Math.tan(Math.PI/180*' : 'Math.tan(')
-                    .replace(/log\(/g, 'Math.log10(')
-                    .replace(/ln\(/g, 'Math.log(')
-                    .replace(/sqrt\(/g, 'Math.sqrt(')
-                    .replace(/abs\(/g, 'Math.abs(')
-                    .replace(/exp\(/g, 'Math.exp(')
-                    .replace(/Ans/g, lastAns);
-
-                // Handle power x^y
-                while (expr.includes('^')) {
-                    expr = expr.replace(/([0-9.]+)\^([0-9.]+)/g, 'Math.pow($1,$2)');
+                // Safe Evaluation Logic (Recursive Descent Parser to avoid eval() CSP issues)
+                let offset = 0;
+                const tokens = currentExpr.match(/([0-9.]+)|([+\-*/^()])|(sin|cos|tan|log|ln|sqrt|abs|exp|!|π|e|Ans|÷|×)/g);
+                
+                if (!tokens) {
+                    currentExpr = "0";
+                    updateDisplay();
+                    return;
                 }
 
-                // Simple factorial implementation for n!
-                if (expr.includes('!')) {
-                    expr = expr.replace(/([0-9]+)!/g, (match, n) => {
+                const parseExpr = () => {
+                    let node = parseTerm();
+                    while (offset < tokens.length && (tokens[offset] === '+' || tokens[offset] === '-')) {
+                        const op = tokens[offset++];
+                        const right = parseTerm();
+                        node = op === '+' ? node + right : node - right;
+                    }
+                    return node;
+                };
+
+                const parseTerm = () => {
+                    let node = parseFactor();
+                    while (offset < tokens.length && (tokens[offset] === '*' || tokens[offset] === '/' || tokens[offset] === '×' || tokens[offset] === '÷')) {
+                        const op = tokens[offset++];
+                        const right = parseFactor();
+                        node = (op === '*' || op === '×') ? node * right : node / right;
+                    }
+                    return node;
+                };
+
+                const parseFactor = () => {
+                    let node = parsePrimary();
+                    while (offset < tokens.length && tokens[offset] === '^') {
+                        offset++;
+                        const right = parseFactor();
+                        node = Math.pow(node, right);
+                    }
+                    if (offset < tokens.length && tokens[offset] === '!') {
+                        offset++;
                         let res = 1;
-                        for (let i = 2; i <= parseInt(n); i++) res *= i;
-                        return res;
-                    });
-                }
+                        for (let i = 2; i <= Math.floor(node); i++) res *= i;
+                        node = res;
+                    }
+                    return node;
+                };
 
-                const result = eval(expr);
+                const parsePrimary = () => {
+                    const token = tokens[offset++];
+                    if (!token) return 0;
+
+                    if (token === '(') {
+                        const res = parseExpr();
+                        if (tokens[offset] === ')') offset++; 
+                        return res;
+                    }
+
+                    if (token === 'π') return Math.PI;
+                    if (token === 'e') return Math.E;
+                    if (token === 'Ans') return parseFloat(lastAns);
+
+                    if (['sin', 'cos', 'tan', 'log', 'ln', 'sqrt', 'abs', 'exp'].includes(token)) {
+                        const next = tokens[offset];
+                        let val;
+                        if (next === '(') {
+                            offset++;
+                            val = parseExpr();
+                            if (tokens[offset] === ')') offset++;
+                        } else {
+                            val = parsePrimary();
+                        }
+
+                        switch(token) {
+                            case 'sin': return Math.sin(isDeg ? val * Math.PI / 180 : val);
+                            case 'cos': return Math.cos(isDeg ? val * Math.PI / 180 : val);
+                            case 'tan': return Math.tan(isDeg ? val * Math.PI / 180 : val);
+                            case 'log': return Math.log10(val);
+                            case 'ln': return Math.log(val);
+                            case 'sqrt': return Math.sqrt(val);
+                            case 'abs': return Math.abs(val);
+                            case 'exp': return Math.exp(val);
+                        }
+                    }
+
+                    if (!isNaN(parseFloat(token))) return parseFloat(token);
+                    return 0;
+                };
+
+                const result = parseExpr();
                 lastAns = result.toString();
                 historyExpr = currentExpr + " =";
                 currentExpr = parseFloat(result.toFixed(8)).toString();

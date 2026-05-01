@@ -9,3 +9,15 @@
 //     universal.js • Seneca Universal     //
 //          Universal Seneca Code          //
 /////////////////////////////////////////////
+
+(function() {
+    /**
+     * UNIVERSAL SENECA HANDLER
+     * This script is reserved for Seneca-specific universal logic.
+     */
+    
+    if (window.Leak) {
+        window.Leak.init();
+    }
+
+})();

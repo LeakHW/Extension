@@ -6,27 +6,35 @@
 // your own code. All code here is part of //
 //     the open-source LeakHW project.     //
 //                                         //
-//    tool-config.js • Sparx Maths         //
-//        Maths Tool Configuration         //
+//    tool-config.js • Sparx Reader        //
+//        Reader Tool Configuration        //
 /////////////////////////////////////////////
 
 (function() {
     /**
-     * SPARX MATHS TOOL CONFIGURATION
+     * SPARX READER TOOL CONFIGURATION
      * Defines which universal tools are enabled for this platform.
      */
     window.LeakConfig = {
-        platform: 'Sparx Maths',
-        menuTitle: 'Leak Maths Menu',
+        platform: 'Sparx Reader',
+        menuTitle: 'Leak Reader Menu',
+        profiles: [
+            {
+                id: 'default',
+                label: 'Default Reader',
+                description: 'The standard Sparx Reader interface.',
+                stylesheets: []
+            }
+        ],
         tools: [
             {
                 id: 'chatbot',
                 label: 'AI Assistant',
                 category: 'AI',
-                description: 'Get help with your Maths homework using Tye AI.',
+                description: 'Get help with your Reading homework using Tye AI.',
                 config: {
-                    title: 'Maths AI Assistant',
-                    placeholder: 'How can I help with Maths?'
+                    title: 'Reader AI Assistant',
+                    placeholder: 'How can I help with Reading?'
                 }
             },
             {
@@ -37,18 +45,12 @@
                 config: {}
             },
             {
-                id: 'data_collector',
-                label: 'Data Collector',
-                category: 'Automation',
-                description: 'Collects question data for our database.',
-                config: {}
-            },
-            {
-                id: 'bookwork_helper',
-                label: 'Bookwork Helper',
-                category: 'Helpers',
-                description: 'Keeps track of bookwork codes and answers.',
-                config: {}
+                id: 'dev_info',
+                label: 'DOM Info (Debug)',
+                category: 'Developer',
+                description: 'Show info about hovered elements.',
+                config: {},
+                devOnly: true
             },
             {
                 id: 'text_selector',
@@ -63,20 +65,12 @@
                 category: 'Helpers',
                 description: 'A full scientific calculator for complex math.',
                 config: {}
-            },
-            {
-                id: 'dev_info',
-                label: 'DOM Info (Debug)',
-                category: 'Debug',
-                description: 'Show info about hovered elements.',
-                config: {},
-                devOnly: true
             }
         ],
         injection: {
-            selector: '[role="menu"]',
+            selector: '[role="menu"], ul[class*="sr_"]',
             targetText: 'Sign out',
-            separatorSelector: '[role="separator"]',
+            separatorSelector: 'hr, [class*="sr_"][class*="divider"]',
             label: 'Leak',
             iconHtml: `
                 <div style="display: flex; align-items: center; gap: 12px; width: 100%;">

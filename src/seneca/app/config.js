@@ -16,8 +16,16 @@
      * Defines which universal tools are enabled for this platform.
      */
     window.LeakConfig = {
-        platform: 'Seneca App',
+        platform: 'Seneca Learning',
         menuTitle: 'Leak Seneca Menu',
+        profiles: [
+            {
+                id: 'default',
+                label: 'Default Seneca',
+                description: 'The standard Seneca interface.',
+                stylesheets: []
+            }
+        ],
         tools: [
             {
                 id: 'chatbot',
@@ -35,6 +43,14 @@
                 category: 'Templates',
                 description: 'A template for creating new Leak tools.',
                 config: {}
+            },
+            {
+                id: 'dev_info',
+                label: 'DOM Info (Debug)',
+                category: 'Developer',
+                description: 'Show info about hovered elements.',
+                config: {},
+                devOnly: true
             },
             {
                 id: 'text_selector',

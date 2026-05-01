@@ -6,28 +6,59 @@
 // your own code. All code here is part of //
 //     the open-source LeakHW project.     //
 //                                         //
-//    tool-config.js • Sparx Reader        //
-//        Reader Tool Configuration        //
+//    tool-config.js • Sparx Maths         //
+//        Maths Tool Configuration         //
 /////////////////////////////////////////////
 
 (function() {
     /**
-     * SPARX READER TOOL CONFIGURATION
+     * SPARX MATHS TOOL CONFIGURATION
      * Defines which universal tools are enabled for this platform.
      */
     window.LeakConfig = {
-        platform: 'Sparx Reader',
-        menuTitle: 'Leak Reader Menu',
+        platform: 'Sparx Maths',
+        menuTitle: 'Leak Maths Menu',
+        profiles: [
+            {
+                id: 'default',
+                label: 'Default Sparx',
+                description: 'The standard Sparx interface.',
+                stylesheets: [] // No extra styles
+            }
+        ],
         tools: [
             {
                 id: 'chatbot',
                 label: 'AI Assistant',
                 category: 'AI',
-                description: 'Get help with your Reading homework using Tye AI.',
+                description: 'Get help with your Maths homework using Tye AI.',
                 config: {
-                    title: 'Reader AI Assistant',
-                    placeholder: 'How can I help with Reading?'
+                    title: 'Maths AI Assistant',
+                    placeholder: 'How can I help with Maths?'
                 }
+            },
+            {
+                id: 'example',
+                label: 'Example Tool',
+                category: 'Templates',
+                description: 'A template for creating new Leak tools.',
+                config: {}
+            },
+            {
+                id: 'data_collector',
+                label: 'Data Collector',
+                category: 'Experimental',
+                experimental: true,
+                description: 'Collects question data for our database.',
+                config: {}
+            },
+            {
+                id: 'bookwork_helper',
+                label: 'Bookwork Helper',
+                category: 'Experimental',
+                experimental: true,
+                description: 'Keeps track of bookwork codes and answers.',
+                config: {}
             },
             {
                 id: 'text_selector',
@@ -42,12 +73,20 @@
                 category: 'Helpers',
                 description: 'A full scientific calculator for complex math.',
                 config: {}
+            },
+            {
+                id: 'dev_info',
+                label: 'DOM Info (Debug)',
+                category: 'Developer',
+                description: 'Show info about hovered elements.',
+                config: {},
+                devOnly: true
             }
         ],
         injection: {
-            selector: '[role="menu"], ul[class*="sr_"]',
+            selector: '[role="menu"]',
             targetText: 'Sign out',
-            separatorSelector: 'hr, [class*="sr_"][class*="divider"]',
+            separatorSelector: '[role="separator"]',
             label: 'Leak',
             iconHtml: `
                 <div style="display: flex; align-items: center; gap: 12px; width: 100%;">

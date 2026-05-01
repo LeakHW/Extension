@@ -94,8 +94,15 @@
 - Standardized tool registration to include categories (AI, Automation, Helpers, Debug).
 - **Answer Capture Overhaul**: Completely rewrote the capture logic in `bookwork_helper` and `data_collector` to be exhaustive. It now captures from inputs, multi-choice buttons, and drag-and-drop slots, with support for image-based answers.
 - **Logging Improvements**: Added "disabled" console messages for all tools and fixed asynchronous messaging errors in `background.js`.
+- **CSP Fix**: Replaced `eval()` in the Scientific Calculator with a custom recursive descent math parser to comply with strict Content Security Policies on platforms like Sparx.
 - **UI Refinements**: Hidden the sidebar when not in the Tools view and removed generic placeholder icons from tool buttons for a cleaner look.
 
+- **UI Profiles System**: Introduced a new system for platform-wide themes and UI customizations.
+  - Renamed `tool-config.js` to `config.js` across all platforms.
+  - Added a 'Profiles' tab to the Leak Menu for easy theme switching.
+  - Created an example 'Blue Background' profile for Sparx Maths.
+  - Centralized profile injection logic in `universal/tools.js`.
+- **Developer Documentation**: Restructured the documentation into a GitHub Wiki format within the `docs/` folder, featuring a Home page, dedicated guides for UI Profiles, Universal Tools, and Platform Setup, and a custom Sidebar and shared Footer.
 
 ### Fixed
 
@@ -115,4 +122,3 @@
 - **Scientific Calculator**: A draggable, fully functional scientific calculator with advanced math operations (trig, log, factorial, etc.) for complex homework.
 
 ### Changed
-

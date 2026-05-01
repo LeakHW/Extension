@@ -1,0 +1,9 @@
+/* BLUE SKY UI PROFILE */
+body {
+    background-color: #00a6ff !important;
+}
+
+/* Optional: change some common Sparx container backgrounds too */
+main, ._PageContainer_kz9c2_1, ._Content_kz9c2_1 {
+    background-color: #ebf8ff !important;
+}

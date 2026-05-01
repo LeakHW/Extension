@@ -24,7 +24,7 @@
       ],
       "js": [
         "universal/tools.js",
-        "seneca/auth/tool-config.js",
+        "seneca/auth/config.js",
         "seneca/auth/index.js",
         "seneca/universal.js"
       ],
@@ -41,7 +41,7 @@
       ],
       "js": [
         "universal/tools.js",
-        "seneca/app/tool-config.js",
+        "seneca/app/config.js",
         "seneca/app/index.js",
         "seneca/universal.js"
       ],
@@ -57,7 +57,7 @@
       ],
       "js": [
         "universal/tools.js",
-        "sparx/maths/tool-config.js",
+        "sparx/maths/config.js",
         "sparx/maths/index.js",
         "sparx/universal.js"
       ],
@@ -73,7 +73,7 @@
       ],
       "js": [
         "universal/tools.js",
-        "sparx/reader/tool-config.js",
+        "sparx/reader/config.js",
         "sparx/reader/index.js",
         "sparx/universal.js"
       ],
@@ -89,7 +89,7 @@
       ],
       "js": [
         "universal/tools.js",
-        "sparx/science/tool-config.js",
+        "sparx/science/config.js",
         "sparx/science/index.js",
         "sparx/universal.js"
       ],
@@ -145,7 +145,8 @@
         "universal/tools/leak_menu/leak_menu.html",
         "universal/tools/chatbot/chatbot.html",
         "universal/tools/example/example.html",
-        "universal/tools/scientific_calculator/scientific_calculator.html"
+        "universal/tools/scientific_calculator/scientific_calculator.html",
+        "sparx/maths/profiles/blue_sky.css"
       ],
       "matches": ["<all_urls>"]
     }

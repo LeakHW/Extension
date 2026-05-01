@@ -19,13 +19,57 @@
 
     const tools = {};
     const enabledTools = {};
-    const menuObservers = new Map(); // Store observers by selector
+    const menuObservers = new Map();
 
     const LOG_STYLE = 'color: #3182ce; font-weight: bold;';
     const PREFIX_STYLE = 'background: #3182ce; color: white; padding: 2px 5px; border-radius: 3px; font-weight: bold;';
 
+    // UI Profile System
+    const applyProfile = (profileId) => {
+        const config = window.LeakConfig;
+        if (!config || !config.profiles) return;
+
+        const profile = config.profiles.find(p => p.id === profileId) || config.profiles[0];
+        if (!profile) return;
+
+        window.Leak.log(`Applying UI Profile: ${profile.label}`);
+
+        // Remove old profile styles
+        document.querySelectorAll('.leak-profile-style').forEach(el => el.remove());
+
+        // Inject new profile styles
+        if (profile.stylesheets) {
+            profile.stylesheets.forEach(path => {
+                const link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.className = 'leak-profile-style';
+                link.href = chrome.runtime.getURL(path);
+                document.head.appendChild(link);
+            });
+        }
+    };
+
     window.Leak = {
-        // ... (logging and logo functions)
+        /**
+         * Initialize the Leak tool system.
+         */
+        init: () => {
+            const hostname = window.location.hostname;
+            
+            // Initialize profile
+            chrome.storage.local.get([`leak_profile_${hostname}`], (result) => {
+                const savedProfile = result[`leak_profile_${hostname}`] || 'default';
+                applyProfile(savedProfile);
+            });
+
+            // Listen for profile changes
+            chrome.storage.onChanged.addListener((changes, area) => {
+                if (area === 'local' && changes[`leak_profile_${hostname}`]) {
+                    applyProfile(changes[`leak_profile_${hostname}`].newValue);
+                }
+            });
+        },
+        
         log: (msg, ...args) => {
             console.log(`%cLEAK%c ${msg}`, PREFIX_STYLE, LOG_STYLE, ...args);
         },

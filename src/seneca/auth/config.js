@@ -18,6 +18,14 @@
     window.LeakConfig = {
         platform: 'Seneca Auth',
         menuTitle: 'Leak Seneca Auth',
+        profiles: [
+            {
+                id: 'default',
+                label: 'Default Auth',
+                description: 'The standard Seneca login interface.',
+                stylesheets: []
+            }
+        ],
         tools: [
             {
                 id: 'chatbot',
@@ -28,6 +36,21 @@
                     title: 'Seneca AI Assistant',
                     placeholder: 'How can I help with your Seneca course?'
                 }
+            },
+            {
+                id: 'example',
+                label: 'Example Tool',
+                category: 'Templates',
+                description: 'A template for creating new Leak tools.',
+                config: {}
+            },
+            {
+                id: 'dev_info',
+                label: 'DOM Info (Debug)',
+                category: 'Developer',
+                description: 'Show info about hovered elements.',
+                config: {},
+                devOnly: true
             }
         ],
         injection: {

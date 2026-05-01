@@ -18,6 +18,14 @@
     window.LeakConfig = {
         platform: 'Sparx Science',
         menuTitle: 'Leak Science Menu',
+        profiles: [
+            {
+                id: 'default',
+                label: 'Default Science',
+                description: 'The standard Sparx Science interface.',
+                stylesheets: []
+            }
+        ],
         tools: [
             {
                 id: 'chatbot',
@@ -28,6 +36,21 @@
                     title: 'Science AI Assistant',
                     placeholder: 'How can I help with Science?'
                 }
+            },
+            {
+                id: 'example',
+                label: 'Example Tool',
+                category: 'Templates',
+                description: 'A template for creating new Leak tools.',
+                config: {}
+            },
+            {
+                id: 'dev_info',
+                label: 'DOM Info (Debug)',
+                category: 'Developer',
+                description: 'Show info about hovered elements.',
+                config: {},
+                devOnly: true
             },
             {
                 id: 'text_selector',

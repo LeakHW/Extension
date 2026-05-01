@@ -14,6 +14,10 @@
     /**
      * UNIVERSAL SPARX HANDLER
      * This script is reserved for Sparx-specific universal logic.
-     * Currently, the main Leak Menu is handled by the root universal/leak_menu.js.
      */
+    
+    if (window.Leak) {
+        window.Leak.init();
+    }
+
 })();
