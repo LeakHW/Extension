@@ -50,44 +50,47 @@
             pendingAnswer = null;
 
             const logData = (capturedAnswer = null) => {
-                chrome.storage.local.get(['leak_setting_collect_data', 'leak_setting_collect_data_verbose'], (result) => {
-                    const isCollectEnabled = result['leak_setting_collect_data'] !== undefined ? result['leak_setting_collect_data'] : true;
-                    if (!isCollectEnabled) return;
+                if (!chrome.runtime?.id) return;
+                try {
+                    chrome.storage.local.get(['leak_setting_collect_data', 'leak_setting_collect_data_verbose'], (result) => {
+                        const isCollectEnabled = result?.leak_setting_collect_data !== undefined ? result.leak_setting_collect_data : true;
+                        if (!isCollectEnabled) return;
 
-                    const bodyText = document.body.innerText;
-                    const bookMatch = bodyText.match(/Bookwork code:\s*(\S+)/);
-                    const book = bookMatch ? bookMatch[1] : null;
-                    
-                    const calcMatch = bodyText.match(/Calculator (not allowed|allowed)/i);
-                    const calc = calcMatch ? calcMatch[0] : null;
-                    
-                    const qElement = [...document.querySelectorAll('span, div, p')].find(e => 
-                        e.innerText && 
-                        e.innerText.includes('?') && 
-                        e.innerText.length < 500 &&
-                        !/Bookwork code|Calculator|Summary|Answer|Watch video/i.test(e.innerText)
-                    );
-                    const q = qElement ? qElement.innerText : "";
-                    const imgs = [...document.querySelectorAll("img")].map(i => i.src).filter(s => s && s.includes("cdn.sparx-learning"));
+                        const bodyText = document.body.innerText;
+                        const bookMatch = bodyText.match(/Bookwork code:\s*(\S+)/);
+                        const book = bookMatch ? bookMatch[1] : null;
+                        
+                        const calcMatch = bodyText.match(/Calculator (not allowed|allowed)/i);
+                        const calc = calcMatch ? calcMatch[0] : null;
+                        
+                        const qElement = [...document.querySelectorAll('span, div, p')].find(e => 
+                            e.innerText && 
+                            e.innerText.includes('?') && 
+                            e.innerText.length < 500 &&
+                            !/Bookwork code|Calculator|Summary|Answer|Watch video/i.test(e.innerText)
+                        );
+                        const q = qElement ? qElement.innerText : "";
+                        const imgs = [...document.querySelectorAll("img")].map(i => i.src).filter(s => s && s.includes("cdn.sparx-learning"));
 
-                    if (q || book) {
-                        const data = {
-                            question: clean(q),
-                            bookwork: book,
-                            calculator: calc,
-                            images: imgs,
-                            answer: capturedAnswer,
-                            timestamp: new Date().toISOString(),
-                            url: window.location.href
-                        };
+                        if (q || book) {
+                            const data = {
+                                question: clean(q),
+                                bookwork: book,
+                                calculator: calc,
+                                images: imgs,
+                                answer: capturedAnswer,
+                                timestamp: new Date().toISOString(),
+                                url: window.location.href
+                            };
 
-                        if (result['leak_setting_collect_data_verbose']) {
-                            window.Leak.log('Detailed Log', data);
-                        } else {
-                            window.Leak.log('Captured Question Data', { bookwork: book, hasAnswer: !!capturedAnswer, answer: capturedAnswer });
+                            if (result?.leak_setting_collect_data_verbose) {
+                                window.Leak.log('Detailed Log', data);
+                            } else {
+                                window.Leak.log('Captured Question Data', { bookwork: book, hasAnswer: !!capturedAnswer, answer: capturedAnswer });
+                            }
                         }
-                    }
-                });
+                    });
+                } catch (e) {}
             };
 
             // Capture logic for data collector (refined based on examples)

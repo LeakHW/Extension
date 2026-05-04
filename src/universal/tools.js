@@ -54,20 +54,25 @@
          * Initialize the Leak tool system.
          */
         init: () => {
+            if (!chrome.runtime?.id) return;
             const hostname = window.location.hostname;
             
             // Initialize profile
-            chrome.storage.local.get([`leak_profile_${hostname}`], (result) => {
-                const savedProfile = result[`leak_profile_${hostname}`] || 'default';
-                applyProfile(savedProfile);
-            });
+            try {
+                chrome.storage.local.get([`leak_profile_${hostname}`], (result) => {
+                    const savedProfile = result[`leak_profile_${hostname}`] || 'default';
+                    applyProfile(savedProfile);
+                });
 
-            // Listen for profile changes
-            chrome.storage.onChanged.addListener((changes, area) => {
-                if (area === 'local' && changes[`leak_profile_${hostname}`]) {
-                    applyProfile(changes[`leak_profile_${hostname}`].newValue);
-                }
-            });
+                // Listen for profile changes
+                chrome.storage.onChanged.addListener((changes, area) => {
+                    if (area === 'local' && changes[`leak_profile_${hostname}`]) {
+                        applyProfile(changes[`leak_profile_${hostname}`].newValue);
+                    }
+                });
+            } catch (e) {
+                console.debug('Leak: Storage access failed (context likely invalidated)');
+            }
         },
         
         log: (msg, ...args) => {
@@ -80,11 +85,14 @@
             console.error(`%cLEAK%c ${msg}`, PREFIX_STYLE, 'color: #e53e3e; font-weight: bold;', ...args);
         },
         debug: (msg, ...args) => {
-            chrome.storage.local.get(['leak_debug_logging'], (result) => {
-                if (result.leak_debug_logging) {
-                    console.debug(`%cLEAK DEBUG%c ${msg}`, 'background: #718096; color: white; padding: 2px 5px; border-radius: 3px; font-weight: bold;', 'color: #718096; font-style: italic;', ...args);
-                }
-            });
+            if (!chrome.runtime?.id) return;
+            try {
+                chrome.storage.local.get(['leak_debug_logging'], (result) => {
+                    if (result?.leak_debug_logging) {
+                        console.debug(`%cLEAK DEBUG%c ${msg}`, 'background: #718096; color: white; padding: 2px 5px; border-radius: 3px; font-weight: bold;', 'color: #718096; font-style: italic;', ...args);
+                    }
+                });
+            } catch (e) {}
         },
 
         showLogo: () => {

@@ -147,7 +147,8 @@
         "universal/tools/chatbot/chatbot.html",
         "universal/tools/example/example.html",
         "universal/tools/scientific_calculator/scientific_calculator.html",
-        "sparx/maths/profiles/blue_sky.css"
+        "sparx/maths/profiles/blue_sky.css",
+        "sparx/universal/profiles/highcontrast.css"
       ],
       "matches": ["<all_urls>"]
     }

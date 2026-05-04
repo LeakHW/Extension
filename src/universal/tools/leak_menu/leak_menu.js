@@ -29,6 +29,9 @@
         container.className = 'leak-menu-overlay';
         
         try {
+            if (!chrome.runtime?.id) {
+                throw new Error('Extension context invalidated.');
+            }
             const response = await fetch(chrome.runtime.getURL('universal/tools/leak_menu/leak_menu.html'));
             const html = await response.text();
             container.innerHTML = html;
@@ -45,106 +48,121 @@
                 versionEl.textContent = chrome.runtime.getManifest().version;
             }
         } catch (error) {
-            window.Leak.error('Failed to load menu HTML', error);
-            container.innerHTML = `<div class="leak-menu-content"><p>Error loading menu.</p></div>`;
+            console.error('Leak: Failed to load menu HTML', error);
+            container.innerHTML = `
+                <div class="leak-menu-content" style="padding: 20px; text-align: center;">
+                    <h2 style="color: #e53e3e;">Leak Menu Error</h2>
+                    <p>${error.message.includes('context invalidated') ? 'Extension was reloaded. Please refresh the page to continue.' : 'Failed to load menu template.'}</p>
+                    <button class="leak-menu-close" style="margin-top: 10px; padding: 8px 16px; background: #3182ce; color: white; border: none; border-radius: 4px; cursor: pointer;">Close</button>
+                </div>
+            `;
         }
 
         document.body.appendChild(container);
         
-        updateCategorySidebar();
-        updateSettingsList();
-        updateDeveloperList();
-
-        // Add event listeners
+        // If we had an error, we still need to be able to close the menu
         const closeBtn = container.querySelector('.leak-menu-close');
-        const footerToolsBtn = container.querySelector('#leak-footer-tools-btn');
-        const footerProfilesBtn = container.querySelector('#leak-footer-profiles-btn');
-        const footerAboutBtn = container.querySelector('#leak-footer-about-btn');
-        const footerSettingsBtn = container.querySelector('#leak-footer-settings-btn');
-        const footerDevBtn = container.querySelector('#leak-footer-dev-btn');
-
-        const views = {
-            tools: container.querySelector('#leak-menu-tools-view'),
-            profiles: container.querySelector('#leak-menu-profiles-view'),
-            settings: container.querySelector('#leak-menu-settings-view'),
-            about: container.querySelector('#leak-menu-about-view'),
-            developer: container.querySelector('#leak-menu-developer-view')
-        };
-
-        const switchView = (viewName) => {
-            Object.keys(views).forEach(v => {
-                if (views[v]) views[v].style.display = 'none';
-            });
-            if (views[viewName]) {
-                views[viewName].style.display = 'grid';
-            }
-
-            // Update footer icon states
-            [footerToolsBtn, footerProfilesBtn, footerAboutBtn, footerSettingsBtn, footerDevBtn].forEach(btn => btn?.classList.remove('active'));
-            if (viewName === 'tools') footerToolsBtn?.classList.add('active');
-            if (viewName === 'profiles') footerProfilesBtn?.classList.add('active');
-            if (viewName === 'about') footerAboutBtn?.classList.add('active');
-            if (viewName === 'settings') footerSettingsBtn?.classList.add('active');
-            if (viewName === 'developer') footerDevBtn?.classList.add('active');
-
-            // Hide sidebar if not in tools view
-            const sidebar = container.querySelector('#leak-menu-category-sidebar');
-            if (sidebar) {
-                sidebar.style.display = viewName === 'tools' ? 'flex' : 'none';
-            }
-
-            // If switching back to tools, ensure a category is selected
-            if (viewName === 'tools') {
-                const activeCat = container.querySelector('.leak-sidebar-item.active');
-                if (!activeCat) {
-                    const firstCat = container.querySelector('.leak-sidebar-item');
-                    if (firstCat) firstCat.click();
-                }
-            } else if (viewName === 'profiles') {
-                updateProfilesList();
-            } else {
-                // Clear active sidebar state when in settings/about
-                container.querySelectorAll('.leak-sidebar-item').forEach(i => i.classList.remove('active'));
-            }
-        };
-
-        closeBtn.addEventListener('click', () => {
-            window.hideLeakMenu();
-        });
-
-        footerToolsBtn?.addEventListener('click', () => switchView('tools'));
-        footerProfilesBtn?.addEventListener('click', () => switchView('profiles'));
-        footerAboutBtn?.addEventListener('click', () => switchView('about'));
-        footerSettingsBtn?.addEventListener('click', () => switchView('settings'));
-        footerDevBtn?.addEventListener('click', () => switchView('developer'));
-
-        // Version click for dev mode
-        let versionClicks = 0;
-        const versionNum = container.querySelector('#leak-version-number');
-        if (versionNum) {
-            versionNum.addEventListener('click', () => {
-                versionClicks++;
-                if (versionClicks >= 10) {
-                    chrome.storage.local.get(['leak_dev_mode'], (res) => {
-                        if (!res.leak_dev_mode) {
-                            chrome.storage.local.set({ 'leak_dev_mode': true }, () => {
-                                window.Leak.log('Developer mode activated!');
-                                if (footerDevBtn) footerDevBtn.style.display = 'flex';
-                                alert('Developer mode activated!');
-                            });
-                        }
-                    });
-                    versionClicks = 0;
-                }
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => {
+                window.hideLeakMenu();
             });
         }
 
-        // Check dev mode on load
-        chrome.storage.local.get(['leak_dev_mode'], (result) => {
-            if (result['leak_dev_mode']) {
-                if (footerDevBtn) footerDevBtn.style.display = 'flex';
+        // Only proceed with full initialization if the menu loaded correctly
+        if (container.querySelector('#leak-menu-tools-view')) {
+            updateCategorySidebar();
+            updateSettingsList();
+            updateDeveloperList();
+
+            // Add event listeners
+            const footerToolsBtn = container.querySelector('#leak-footer-tools-btn');
+            const footerProfilesBtn = container.querySelector('#leak-footer-profiles-btn');
+            const footerAboutBtn = container.querySelector('#leak-footer-about-btn');
+            const footerSettingsBtn = container.querySelector('#leak-footer-settings-btn');
+            const footerDevBtn = container.querySelector('#leak-footer-dev-btn');
+
+            const views = {
+                tools: container.querySelector('#leak-menu-tools-view'),
+                profiles: container.querySelector('#leak-menu-profiles-view'),
+                settings: container.querySelector('#leak-menu-settings-view'),
+                about: container.querySelector('#leak-menu-about-view'),
+                developer: container.querySelector('#leak-menu-developer-view')
+            };
+
+            const switchView = (viewName) => {
+                Object.keys(views).forEach(v => {
+                    if (views[v]) views[v].style.display = 'none';
+                });
+                if (views[viewName]) {
+                    views[viewName].style.display = 'grid';
+                }
+
+                // Update footer icon states
+                [footerToolsBtn, footerProfilesBtn, footerAboutBtn, footerSettingsBtn, footerDevBtn].forEach(btn => btn?.classList.remove('active'));
+                if (viewName === 'tools') footerToolsBtn?.classList.add('active');
+                if (viewName === 'profiles') footerProfilesBtn?.classList.add('active');
+                if (viewName === 'about') footerAboutBtn?.classList.add('active');
+                if (viewName === 'settings') footerSettingsBtn?.classList.add('active');
+                if (viewName === 'developer') footerDevBtn?.classList.add('active');
+
+                // Hide sidebar if not in tools view
+                const sidebar = container.querySelector('#leak-menu-category-sidebar');
+                if (sidebar) {
+                    sidebar.style.display = viewName === 'tools' ? 'flex' : 'none';
+                }
+
+                // If switching back to tools, ensure a category is selected
+                if (viewName === 'tools') {
+                    const activeCat = container.querySelector('.leak-sidebar-item.active');
+                    if (!activeCat) {
+                        const firstCat = container.querySelector('.leak-sidebar-item');
+                        if (firstCat) firstCat.click();
+                    }
+                } else if (viewName === 'profiles') {
+                    updateProfilesList();
+                } else {
+                    // Clear active sidebar state when in settings/about
+                    container.querySelectorAll('.leak-sidebar-item').forEach(i => i.classList.remove('active'));
+                }
+            };
+
+            footerToolsBtn?.addEventListener('click', () => switchView('tools'));
+            footerProfilesBtn?.addEventListener('click', () => switchView('profiles'));
+            footerAboutBtn?.addEventListener('click', () => switchView('about'));
+            footerSettingsBtn?.addEventListener('click', () => switchView('settings'));
+            footerDevBtn?.addEventListener('click', () => switchView('developer'));
+
+            // Version click for dev mode
+            let versionClicks = 0;
+            const versionNum = container.querySelector('#leak-version-number');
+            if (versionNum) {
+                versionNum.addEventListener('click', () => {
+                    versionClicks++;
+                    if (versionClicks >= 10) {
+                        chrome.storage.local.get(['leak_dev_mode'], (res) => {
+                            if (!res.leak_dev_mode) {
+                                chrome.storage.local.set({ 'leak_dev_mode': true }, () => {
+                                    window.Leak.log('Developer mode activated!');
+                                    if (footerDevBtn) footerDevBtn.style.display = 'flex';
+                                    alert('Developer mode activated!');
+                                });
+                            }
+                        });
+                        versionClicks = 0;
+                    }
+                });
             }
-        });
+
+            // Check dev mode on load
+            chrome.storage.local.get(['leak_dev_mode'], (result) => {
+                if (result['leak_dev_mode']) {
+                    if (footerDevBtn) footerDevBtn.style.display = 'flex';
+                }
+            });
+
+            // Initial view
+            switchView('tools');
+        }
 
         // Close on overlay click
         container.addEventListener('click', (e) => {
@@ -152,9 +170,6 @@
                 window.hideLeakMenu();
             }
         });
-
-        // Initial view
-        switchView('tools');
     };
 
     const updateCategorySidebar = () => {

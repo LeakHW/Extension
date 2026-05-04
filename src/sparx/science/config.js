@@ -24,6 +24,12 @@
                 label: 'Default Science',
                 description: 'The standard Sparx Science interface.',
                 stylesheets: []
+            },
+            {
+                id: 'high_contrast',
+                label: 'High Contrast (EXP)',
+                descrpition: 'Make the contrast higher (EXPERIMENTAL)',
+                stylesheets: ['sparx/universal/profiles/highcontrast.css']
             }
         ],
         tools: [

@@ -125,8 +125,6 @@
                 });
 
                 // 2. Capture selected options (Multiple choice, etc.)
-                // Sparx often uses a specific class for selected options. 
-                // Based on common patterns, it's likely [class*="Selected"] or [aria-pressed="true"]
                 const allOptions = document.querySelectorAll('._Option_kz9c2_66, [role="button"], button[class*="_Option_"]');
                 allOptions.forEach(opt => {
                     const isSelected = opt.classList.contains('_Selected_kz9c2_152') || 
@@ -135,12 +133,9 @@
                                      opt.className.includes('Selected');
                     
                     if (isSelected) {
-                        // Check for text content
                         let text = opt.innerText || opt.textContent;
-                        // Clean up text (remove "Zoom" etc.)
                         text = clean(text);
                         
-                        // Check for images if no text
                         const img = opt.querySelector('img');
                         if (!text && img) {
                             text = `[Image: ${img.src.split('/').pop()}]`;
@@ -180,26 +175,28 @@
                     }
                 });
 
-                // Combine all unique values into a final answer string
                 const allValues = [
                     ...parts.inputs.map(p => p.value),
                     ...parts.options.map(p => p.value),
                     ...parts.slots.map(p => p.value)
                 ];
 
-                // Remove duplicates and join
                 const finalAnswer = [...new Set(allValues)].filter(v => v && v.length > 0).join(', ');
                 
-                chrome.storage.local.get(['leak_setting_collect_data_verbose'], (result) => {
-                    if (result['leak_setting_collect_data_verbose']) {
-                        window.Leak.log(`Exhaustive Capture [${qData.bookwork}]:`, {
-                            parts,
-                            final: finalAnswer
+                if (chrome.runtime?.id) {
+                    try {
+                        chrome.storage.local.get(['leak_setting_collect_data_verbose'], (result) => {
+                            if (result?.leak_setting_collect_data_verbose) {
+                                window.Leak.log(`Exhaustive Capture [${qData.bookwork}]:`, {
+                                    parts,
+                                    final: finalAnswer
+                                });
+                            } else {
+                                window.Leak.debug('Answer captured:', finalAnswer);
+                            }
                         });
-                    } else {
-                        window.Leak.debug('Answer captured:', finalAnswer);
-                    }
-                });
+                    } catch (e) {}
+                }
 
                 if (finalAnswer) {
                     return {
@@ -213,17 +210,20 @@
             };
 
             const handleCorrectAnswer = (data) => {
-                chrome.storage.local.get(['leak_setting_collect_data'], (result) => {
-                    const isCollectEnabled = result['leak_setting_collect_data'] !== undefined ? result['leak_setting_collect_data'] : true;
-                    if (!isCollectEnabled) {
-                        window.Leak.log('Answer correct, but logging is disabled in settings.');
-                        return;
-                    }
+                if (!chrome.runtime?.id) return;
+                try {
+                    chrome.storage.local.get(['leak_setting_collect_data'], (result) => {
+                        const isCollectEnabled = result?.leak_setting_collect_data !== undefined ? result.leak_setting_collect_data : true;
+                        if (!isCollectEnabled) {
+                            window.Leak.log('Answer correct, but logging is disabled in settings.');
+                            return;
+                        }
 
-                    sessionData[data.bookwork] = data;
-                    window.Leak.log(`MATCHED Question & Answer [${data.bookwork}]`, data);
-                    window.Leak.debug('Full Session Log:', sessionData);
-                });
+                        sessionData[data.bookwork] = data;
+                        window.Leak.log(`MATCHED Question & Answer [${data.bookwork}]`, data);
+                        window.Leak.debug('Full Session Log:', sessionData);
+                    });
+                } catch (e) {}
             };
 
             // Monitor for changes

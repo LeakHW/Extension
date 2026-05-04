@@ -24,6 +24,12 @@
                 label: 'Default Sparx',
                 description: 'The standard Sparx interface.',
                 stylesheets: [] // No extra styles
+            },
+            {
+                id: 'high_contrast',
+                label: 'High Contrast (EXP)',
+                descrpition: 'Make the contrast higher (EXPERIMENTAL)',
+                stylesheets: ['sparx/universal/profiles/highcontrast.css']
             }
         ],
         tools: [
