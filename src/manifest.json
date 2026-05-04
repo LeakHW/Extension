@@ -127,7 +127,8 @@
         "universal/tools/bookwork_helper/bookwork_helper.js",
         "universal/tools/dev_info/dev_info.js",
         "universal/tools/text_selector/text_selector.js",
-        "universal/tools/scientific_calculator/scientific_calculator.js"
+        "universal/tools/scientific_calculator/scientific_calculator.js",
+        "universal/tools/autosolve/autosolve.js"
       ],
       "css": [
         "universal/tools/leak_menu/leak_menu.css",

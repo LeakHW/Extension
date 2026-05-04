@@ -58,3 +58,8 @@ Leak is a universal homework helper extension designed for Seneca Learning and S
   - Uses `config.js` for app and auth modules.
   - Injects the Leak Menu button into the settings menu.
 - `src/background.js`: Handles extension icon clicks, message passing, and menu triggering.
+
+
+
+
+To get information on known bugs, call an API request to the GitHub repo at https://github.com/LeakHW/Extension

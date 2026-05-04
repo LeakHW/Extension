@@ -71,6 +71,13 @@
                 category: 'Helpers',
                 description: 'A full scientific calculator for complex math.',
                 config: {}
+            },
+            {
+                id: 'autosolve',
+                label: 'Autosolve',
+                category: 'AI',
+                description: 'Automatically solve reading questions using AI.',
+                config: {}
             }
         ],
         injection: {
