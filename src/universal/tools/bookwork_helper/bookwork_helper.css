@@ -12,41 +12,4 @@
 /////////////////////////////////////////////
 */
 
-.leak-bookwork-gui {
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    z-index: 9999999;
-    background: rgba(23, 145, 206, 0.9);
-    color: white;
-    padding: 8px 12px;
-    border-radius: 8px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-weight: 600;
-    font-size: 14px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    pointer-events: none;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.leak-bookwork-gui.hidden {
-    opacity: 0;
-    transform: translateY(-10px);
-}
-
-.leak-bookwork-gui .icon {
-    width: 16px;
-    height: 16px;
-    fill: currentColor;
-}
-
-.leak-bookwork-gui .code {
-    background: rgba(255, 255, 255, 0.2);
-    padding: 2px 6px;
-    border-radius: 4px;
-    letter-spacing: 0.5px;
-}
+/* CSS file kept for compatibility but not used anymore */

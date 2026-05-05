@@ -60,10 +60,10 @@
             },
             {
                 id: 'bookwork_helper',
-                label: 'Bookwork Helper',
+                label: 'Bookwork Skipper',
                 category: 'Experimental',
                 experimental: true,
-                description: 'Keeps track of bookwork codes and answers.',
+                description: 'Auto-skips bookwork checks (0% accuracy!).',
                 config: {}
             },
             {
