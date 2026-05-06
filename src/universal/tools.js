@@ -60,6 +60,7 @@
             // Initialize profile
             try {
                 chrome.storage.local.get([`leak_profile_${hostname}`], (result) => {
+                    if (chrome.runtime.lastError) return;
                     const savedProfile = result[`leak_profile_${hostname}`] || 'default';
                     applyProfile(savedProfile);
                 });
@@ -136,6 +137,7 @@
                 const hostname = window.location.hostname;
                 const storageKey = `leak_tool_${id}_enabled_${hostname}`;
                 chrome.storage.local.get([storageKey], (result) => {
+                    if (chrome.runtime.lastError) return;
                     const isEnabled = result[storageKey] || false;
                     toggleFn(isEnabled);
                 });
@@ -158,6 +160,7 @@
                 const hostname = window.location.hostname;
                 const storageKey = `leak_tool_${id}_enabled_${hostname}`;
                 chrome.storage.local.get([storageKey], (result) => {
+                    if (chrome.runtime.lastError) return;
                     const isEnabled = result[storageKey] || false;
                     tools[id](isEnabled);
                 });

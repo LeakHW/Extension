@@ -16,25 +16,32 @@
      * Automatically solves Sparx Reader questions using AI.
      */
     let bookText = "";
+    let logTimeout = null;
 
     // Load initial text from storage
     chrome.storage.local.get(['leak_reader_book_text'], (result) => {
+        if (chrome.runtime.lastError) return;
         if (result.leak_reader_book_text) {
             bookText = result.leak_reader_book_text;
         }
     });
 
     const logBookText = () => {
-        const content = document.querySelector('.read-content');
-        if (content) {
-            const text = content.innerText.trim();
-            // Only add if it's new content and not empty
-            if (text && !bookText.includes(text)) {
-                bookText += (bookText ? "\n\n" : "") + text;
-                chrome.storage.local.set({ leak_reader_book_text: bookText });
-                window.Leak.debug('Logged book text updated.');
+        // Debounce logging to avoid excessive storage calls
+        if (logTimeout) clearTimeout(logTimeout);
+        logTimeout = setTimeout(() => {
+            const content = document.querySelector('.read-content');
+            if (content) {
+                const text = content.innerText.trim();
+                // Avoid logging if empty or already logged
+                // We use a more precise check to avoid partial matches blocking new text
+                if (text && !bookText.split('\n\n').includes(text)) {
+                    bookText += (bookText ? "\n\n" : "") + text;
+                    chrome.storage.local.set({ leak_reader_book_text: bookText });
+                    window.Leak.debug('Logged book text updated.');
+                }
             }
-        }
+        }, 1000);
     };
 
     const solveQuestion = async (btn, questionText, options) => {
@@ -44,7 +51,13 @@
 
         try {
             // Get token and text from storage to be sure
-            const result = await new Promise(resolve => chrome.storage.local.get(['leak_token', 'leak_session_id', 'leak_reader_book_text'], resolve));
+            const result = await new Promise((resolve, reject) => {
+                chrome.storage.local.get(['leak_token', 'leak_session_id', 'leak_reader_book_text'], (res) => {
+                    if (chrome.runtime.lastError) reject(chrome.runtime.lastError);
+                    else resolve(res);
+                });
+            });
+            
             const token = result.leak_token;
             let sessionId = result.leak_session_id;
             const currentBookText = result.leak_reader_book_text || bookText;
@@ -105,15 +118,21 @@
                 }
             });
 
-            if (!found) {
+            if (found) {
+                btn.textContent = 'Solved!';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                }, 2000);
+            } else {
                 alert('AI Response: ' + answer);
+                btn.textContent = originalText;
             }
 
         } catch (error) {
             window.Leak.error('Autosolve failed:', error);
             alert('Autosolve error: ' + error.message);
-        } finally {
             btn.textContent = originalText;
+        } finally {
             btn.disabled = false;
         }
     };
