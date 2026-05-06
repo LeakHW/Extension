@@ -9,7 +9,7 @@ Leak is a universal homework helper extension designed for Seneca Learning and S
 - **Universal Components (`src/universal`)**: Components that run on all URLs.
   - **Universal Tool Manager (`tools.js`)**: Manages tool registration and state.
   - **Individual Tools (`src/universal/tools/`)**: Each tool resides in its own folder.
-    - **Leak Menu (`leak_menu/`)**: The main control center, appearing in the middle of the screen. Features sidebar categories and footer navigation.
+    - **Leak Menu (`leak_menu/`)**: The main control center, appearing in the middle of the screen. Uses footer navigation for top-level pages (`Tools`, `UI Profiles`, `Settings`) and a sidebar for tool categories and settings categories.
     - **AI Chatbot (`chatbot/`)**: A toggleable assistant in the bottom-right corner.
     - **Scientific Calculator (`scientific_calculator/`)**: A draggable, fully functional scientific calculator with advanced math operations.
     - **Text Selector (`text_selector/`)**: A universal helper that forces elements to be selectable and enables copying on restricted sites.
@@ -17,6 +17,7 @@ Leak is a universal homework helper extension designed for Seneca Learning and S
     - **Data Collector (`data_collector/`)**: Collects Sparx Maths question data and images when enabled in settings.
     - **Bookwork Helper (`bookwork_helper/`)**: Automatically tracks bookwork codes and user-inputted answers on Sparx Maths.
     - **AI Assistant (`ai_assistant/`)**: Logic and UI for the extension assistant (popup).
+    - **Autosolve (`autosolve/`)**: Solves Sparx Reader and Sparx Maths questions using the AI assistant, with optional OCR support for image-based maths questions.
 
 - **UI Profile System**: A platform-wide theming engine managed by `tools.js`.
   - **Profiles**: Defined in site-specific `config.js` files.
@@ -25,7 +26,7 @@ Leak is a universal homework helper extension designed for Seneca Learning and S
 
 ## UI & Templating
 
-- **Settings System**: A centralized settings view in the `leak_menu` with "Main" and "Optional Features" sections.
+- **Settings System**: A centralized settings view in the `leak_menu` with sidebar categories such as `General`, `Tokens`, `About`, optional `Dev Tools`, and tool-defined settings tabs via `settingsTab`.
 - **HTML Menus**: Tool menus and UI templates are stored in separate `.html` files within their respective tool folders.
 - **Dynamic Loading**: Tools fetch their HTML templates using `chrome.runtime.getURL()` and `fetch()` at runtime.
 
@@ -38,7 +39,8 @@ Leak is a universal homework helper extension designed for Seneca Learning and S
 
 - **API**: Communicates with Tye AI via a POST webhook.
 - **Session Tracking**: Uses `leak_session_id` (prefixed with `leak_`) to maintain context.
-- **Authentication**: Users provide a Tye API token which is stored locally.
+- **Authentication**: Users provide a Tye API token stored locally as `leak_token`.
+- **Token Settings**: AI and OCR tokens are managed in the Settings `Tokens` category.
 
 ## Development Standards
 
@@ -52,14 +54,11 @@ Leak is a universal homework helper extension designed for Seneca Learning and S
 - `src/universal/`: Global logic and manager.
 - `src/universal/tools/`: Individual tool folders.
 - `src/sparx/`: Integration for Sparx Maths, Reader, and Science.
-    - `maths/`: Enabled with `chatbot`, `scientific_calculator`, `text_selector`, `data_collector`, and `bookwork_helper`.
-    - `config.js`: Defines tools and UI profiles for the platform.
+  - `maths/`: Enabled with tools including `chatbot`, `scientific_calculator`, `text_selector`, `data_collector`, `bookwork_helper`, and `autosolve`.
+  - `config.js`: Defines tools and UI profiles for the platform.
 - `src/seneca/`: Integration for Seneca Learning.
   - Uses `config.js` for app and auth modules.
   - Injects the Leak Menu button into the settings menu.
 - `src/background.js`: Handles extension icon clicks, message passing, and menu triggering.
-
-
-
 
 To get information on known bugs, call an API request to the GitHub repo at https://github.com/LeakHW/Extension

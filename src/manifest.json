@@ -12,7 +12,8 @@
   ],
   "host_permissions": [
     "<all_urls>",
-    "http://141.147.118.157:5678/*"
+    "https://api.stufy.qzz.io/*",
+    "https://api.ocr.space/*"
   ],
   "background": {
     "service_worker": "background.js"

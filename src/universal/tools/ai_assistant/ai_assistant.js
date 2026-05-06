@@ -19,8 +19,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Load saved token from storage
     chrome.storage.local.get(['leak_token'], (result) => {
+        if (chrome.runtime.lastError) return;
         if (result.leak_token) {
             tokenInput.value = result.leak_token;
+        }
+    });
+
+    // Sync with global storage
+    chrome.storage.onChanged.addListener((changes, area) => {
+        if (area === 'local' && changes.leak_token) {
+            tokenInput.value = changes.leak_token.newValue || '';
         }
     });
 
@@ -55,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
             responseDiv.textContent = '';
 
             try {
-                const response = await fetch('http://141.147.118.157:5678/webhook/f9b818be-f507-436d-9af8-8ebd8270d049', {
+                const response = await fetch('https://api.stufy.qzz.io/webhook/f9b818be-f507-436d-9af8-8ebd8270d049', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

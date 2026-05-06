@@ -81,6 +81,23 @@
                 config: {}
             },
             {
+                id: 'autosolve',
+                label: 'Autosolve',
+                category: 'AI',
+                description: 'Automatically solve maths questions using AI.',
+                settingsTab: 'AI',
+                settings: [
+                    {
+                        id: 'autosolve_ocr_enabled',
+                        label: 'Enable OCR',
+                        description: 'Use OCR to extract text from question images.',
+                        default: true,
+                        storageKey: 'leak_autosolve_ocr_enabled'
+                    }
+                ],
+                config: {}
+            },
+            {
                 id: 'dev_info',
                 label: 'DOM Info (Debug)',
                 category: 'Developer',
